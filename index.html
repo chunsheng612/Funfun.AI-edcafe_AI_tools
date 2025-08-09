@@ -25,36 +25,34 @@
         body {
             font-family: 'Noto Sans TC', sans-serif; background-color: var(--edcafe-bg);
             color: var(--edcafe-text-dark); font-size: 16px; line-height: 1.6;
+            overflow: hidden;
         }
         button { font-family: 'Noto Sans TC', sans-serif; cursor: pointer; }
 
-        @keyframes fadeIn-up {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        @keyframes button-press {
-            0% { transform: scale(1); }
-            50% { transform: scale(0.95); }
-            100% { transform: scale(1); }
-        }
+        @keyframes fadeIn-up { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes button-press { 0% { transform: scale(1); } 50% { transform: scale(0.95); } 100% { transform: scale(1); } }
 
         /* --- 3. 互動粒子背景 --- */
         #particles-js { position: fixed; width: 100%; height: 100%; top: 0; left: 0; z-index: -1; }
 
         /* --- 4. 主要佈局 --- */
-        .page-wrapper { display: flex; flex-direction: column; min-height: 100vh; }
+        .page-wrapper { display: flex; flex-direction: column; height: 100vh; }
         .header { display: flex; align-items: center; gap: 1rem; padding: 1.5rem 2.5rem; animation: fadeIn-up 0.5s ease-out; }
         .header-logo { height: 40px; }
         .header-title { font-size: 1.75rem; font-weight: 700; }
-        .main-container { display: flex; padding: 0 2.5rem 2.5rem; gap: 2.5rem; flex-grow: 1; }
+        .main-container { display: flex; padding: 0 2.5rem 2.5rem; gap: 2.5rem; flex-grow: 1; overflow: hidden; }
         .sidebar { width: 380px; flex-shrink: 0; display: flex; flex-direction: column; gap: 1.5rem; animation: fadeIn-up 0.6s ease-out; }
-        .content-area { flex-grow: 1; min-width: 0; animation: fadeIn-up 0.7s ease-out; }
-        .footer { text-align: center; padding: 2rem; color: var(--edcafe-text-light); font-size: 0.875rem; }
-
+        
+        /* 【佈局修正】讓 content-area 成為 flex 容器 */
+        .content-area {
+            flex-grow: 1;
+            min-width: 0;
+            animation: fadeIn-up 0.7s ease-out;
+            display: flex; /* 啟用 Flexbox */
+            flex-direction: column; /* 讓內部元件垂直排列 */
+        }
+        
         /* --- 5. 元件樣式 --- */
         .box { background-color: #FFFFFF; padding: 1.5rem; border-radius: 16px; border: 1px solid #FFFFFF; box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
         .box-title { font-weight: 500; margin-bottom: 1rem; color: var(--edcafe-text-light); }
@@ -64,13 +62,9 @@
         .filter-btn.active, .filter-btn:hover { background-color: var(--edcafe-dark-green); color: #FFF; border-color: var(--edcafe-dark-green); }
         .filter-btn:active { animation: button-press 0.2s ease-out; }
         
-        /* 【左側滑動】: 核心修改 */
         .tool-list-box {
-            display: flex;
-            flex-direction: column;
-            overflow-y: auto; /* 當內容溢出時，顯示垂直滾動條 */
-            max-height: 450px; /* 設定一個最大高度，大約可以容納5-6個項目 */
-            flex-grow: 1; /* 讓它填滿剩餘的垂直空間 */
+            display: flex; flex-direction: column; overflow-y: auto;
+            max-height: 500px; flex-grow: 1;
         }
         #tool-repeater { display: flex; flex-direction: column; gap: 0.75rem; }
         
@@ -81,11 +75,17 @@
         .tool-item-button .arrow { background-color: #FFF; color: var(--edcafe-dark-green); width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; font-weight: bold; }
         .tool-item-button:active { animation: button-press 0.2s ease-out; }
         
-        .welcome-view { text-align: center; padding: 8rem 2rem; animation: fadeIn 0.5s ease-in-out; }
+        .welcome-view { text-align: center; margin: auto; animation: fadeIn 0.5s ease-in-out; }
         .welcome-view h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
         
-        .detail-view { display: none; height: 100%; flex-direction: column; animation: fadeIn 0.5s ease-in-out; }
-        .detail-header { margin-bottom: 2rem; }
+        /* 【佈局修正】讓 detail-view 成為 flex 容器 */
+        .detail-view {
+            display: none;
+            height: 100%;
+            flex-direction: column;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        .detail-header { margin-bottom: 1.5rem; flex-shrink: 0; }
         .detail-title { font-size: 2rem; font-weight: 700; }
         .detail-description { color: var(--edcafe-text-light); margin-top: 0.5rem; }
         .detail-actions { margin-top: 1rem; display: flex; gap: 1rem; }
@@ -93,30 +93,26 @@
         .action-btn:hover { background-color: #FFF; color: var(--edcafe-dark-green); }
         .action-btn:active { animation: button-press 0.2s ease-out; }
         
-        /* 【80%內嵌大小】: 核心修改 */
-        .chatbot-outer-container {
+        /* 【佈局修正】讓 chatbot-container 自動填滿剩餘空間 */
+        .chatbot-container {
             width: 100%;
-            flex-grow: 1;
-            min-height: 70vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        .chatbot-inner-container {
-            width: 80%;
-            height: 80%;
+            flex-grow: 1; /* 魔法指令：佔滿所有剩餘的垂直空間 */
+            min-height: 0; /* 在 flex 容器中，這是必要的，以允許正確縮小 */
             border-radius: 16px;
             overflow: hidden;
             box-shadow: 0 8px 30px rgba(0,0,0,0.1);
         }
-        .chatbot-inner-container iframe { width: 100%; height: 100%; border: none; }
+        .chatbot-container iframe { width: 100%; height: 100%; border: none; }
 
         /* --- 6. 響應式設計 --- */
         @media (max-width: 1024px) {
+            body { overflow: auto; }
+            .page-wrapper { height: auto; }
             .main-container { flex-direction: column; }
             .sidebar { width: 100%; animation-delay: 0s; }
             .content-area { animation-delay: 0s; }
             .tool-list-box { max-height: 250px; }
+            .chatbot-container { min-height: 80vh; } /* 手機上給一個較大的最小高度 */
         }
     </style>
 </head>
@@ -168,18 +164,12 @@
                             <button id="open-new-page-btn" class="action-btn">在新頁面開啟</button>
                         </div>
                     </div>
-                    <div class="chatbot-outer-container">
-                         <div class="chatbot-inner-container">
-                            <iframe id="chatbot-iframe" src="about:blank" title="Chatbot"></iframe>
-                        </div>
+                    <div class="chatbot-container">
+                        <iframe id="chatbot-iframe" src="about:blank" title="Chatbot"></iframe>
                     </div>
                 </div>
             </section>
         </main>
-
-        <footer class="footer">
-            ©2025 edcafe. All rights reserved.
-        </footer>
     </div>
     
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
@@ -257,7 +247,6 @@
             }
 
             const aiTools = await loadToolsFromSheet();
-            
             renderTools(aiTools);
 
             searchInput.addEventListener('input', (e) => {
@@ -298,54 +287,8 @@
             });
             
             particlesJS('particles-js', {
-                "particles": {
-                    "number": {
-                        "value": 60,
-                        "density": {
-                            "enable": true,
-                            "value_area": 800
-                        }
-                    },
-                    "color": {
-                        "value": "#cccccc"
-                    },
-                    "shape": {
-                        "type": "circle"
-                    },
-                    "opacity": {
-                        "value": 0.5,
-                        "random": true
-                    },
-                    "size": {
-                        "value": 2,
-                        "random": true
-                    },
-                    "line_linked": {
-                        "enable": true,
-                        "distance": 150,
-                        "color": "#dddddd",
-                        "opacity": 0.4,
-                        "width": 1
-                    },
-                    "move": {
-                        "enable": true,
-                        "speed": 1,
-                        "direction": "none",
-                        "out_mode": "out"
-                    }
-                },
-                "interactivity": {
-                    "events": {
-                        "onhover": {
-                            "enable": true,
-                            "mode": "grab"
-                        },
-                        "onclick": {
-                            "enable": false
-                        }
-                    }
-                },
-                "retina_detect": true
+                "particles": { "number": { "value": 60, "density": { "enable": true, "value_area": 800 }}, "color": { "value": "#cccccc" }, "shape": { "type": "circle" }, "opacity": { "value": 0.5, "random": true }, "size": { "value": 2, "random": true }, "line_linked": { "enable": true, "distance": 150, "color": "#dddddd", "opacity": 0.4, "width": 1 }, "move": { "enable": true, "speed": 1, "direction": "none", "out_mode": "out" }},
+                "interactivity": { "events": { "onhover": { "enable": true, "mode": "grab" }, "onclick": { "enable": false }}}, "retina_detect": true
             });
         });
     </script>
