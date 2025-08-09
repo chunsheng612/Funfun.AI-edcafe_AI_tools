@@ -64,9 +64,13 @@
         .filter-btn.active, .filter-btn:hover { background-color: var(--edcafe-dark-green); color: #FFF; border-color: var(--edcafe-dark-green); }
         .filter-btn:active { animation: button-press 0.2s ease-out; }
         
+        /* 【左側滑動】: 核心修改 */
         .tool-list-box {
-            display: flex; flex-direction: column; overflow-y: auto;
-            max-height: 450px; flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto; /* 當內容溢出時，顯示垂直滾動條 */
+            max-height: 450px; /* 設定一個最大高度，大約可以容納5-6個項目 */
+            flex-grow: 1; /* 讓它填滿剩餘的垂直空間 */
         }
         #tool-repeater { display: flex; flex-direction: column; gap: 0.75rem; }
         
@@ -89,13 +93,21 @@
         .action-btn:hover { background-color: #FFF; color: var(--edcafe-dark-green); }
         .action-btn:active { animation: button-press 0.2s ease-out; }
         
+        /* 【80%內嵌大小】: 核心修改 */
         .chatbot-outer-container {
-            width: 100%; flex-grow: 1; min-height: 70vh;
-            display: flex; justify-content: center; align-items: center;
+            width: 100%;
+            flex-grow: 1;
+            min-height: 70vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
         .chatbot-inner-container {
-            width: 80%; height: 80%; border-radius: 16px;
-            overflow: hidden; box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+            width: 80%;
+            height: 80%;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
         }
         .chatbot-inner-container iframe { width: 100%; height: 100%; border: none; }
 
@@ -173,23 +185,19 @@
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', async function() {
-            // --- 1. 從您的 Google Sheets 載入資料 ---
             const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSyNzyJDCrEB_TcB_GGjRkJGRoU5Aw3S3giBao57HFDyTpE8mn_d7OXYn4z_-DeZ9rCGyUSaHmQBB7J/pub?gid=0&single=true&output=csv';
-
+            
             async function loadToolsFromSheet() {
                 try {
                     const response = await fetch(sheetUrl);
                     if (!response.ok) throw new Error('Network response failed');
                     const csvText = await response.text();
-                    
                     const lines = csvText.trim().split(/\r?\n/);
                     const headers = lines[0].split(',').map(h => h.trim());
                     return lines.slice(1).map(line => {
                         const values = line.split(',');
                         let tool = {};
-                        headers.forEach((header, index) => {
-                            tool[header] = values[index] ? values[index].trim() : '';
-                        });
+                        headers.forEach((header, index) => { tool[header] = values[index] ? values[index].trim() : ''; });
                         return tool;
                     });
                 } catch (error) {
@@ -199,7 +207,6 @@
                 }
             }
 
-            // --- 2. 獲取所有需要的 DOM 元件 ---
             const searchInput = document.getElementById('search-input');
             const filterButtonsContainer = document.getElementById('filter-buttons');
             const toolRepeater = document.getElementById('tool-repeater');
@@ -215,14 +222,12 @@
             let currentSearchTerm = '';
             let currentTool = null;
 
-            // --- 3. 核心函式 ---
             function renderTools(toolsData) {
                 const filteredTools = toolsData.filter(tool => {
                     const matchesCategory = currentCategory === 'all' || tool.category === currentCategory;
                     const matchesSearch = tool.name.toLowerCase().includes(currentSearchTerm.toLowerCase());
                     return matchesCategory && matchesSearch;
                 });
-
                 toolRepeater.innerHTML = '';
                 if (filteredTools.length > 0) {
                     filteredTools.forEach(tool => {
@@ -251,7 +256,6 @@
                 chatbotIframe.src = tool.chatbotUrl;
             }
 
-            // --- 4. 初始執行與事件監聽 ---
             const aiTools = await loadToolsFromSheet();
             
             renderTools(aiTools);
@@ -293,7 +297,6 @@
                 }
             });
             
-            // 初始化粒子效果
             particlesJS('particles-js', {
                 "particles": {
                     "number": {
