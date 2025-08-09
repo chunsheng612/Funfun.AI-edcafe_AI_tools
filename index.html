@@ -32,7 +32,7 @@
         .header { display: flex; align-items: center; gap: 1rem; padding: 1.5rem 2.5rem; animation: fadeIn-up 0.5s ease-out; }
         .header-logo { height: 40px; }
         .header-title { font-size: 1.75rem; font-weight: 700; }
-        .main-container { display: flex; padding: 0 2.5rem 2.5rem; gap: 2.5rem; flex-grow: 1; }
+        .main-container { display: flex; padding: 0 2.5rem 2.5rem; gap: 2.5rem; flex-grow: 1; overflow: hidden; }
         .sidebar { width: 380px; flex-shrink: 0; display: flex; flex-direction: column; gap: 1.5rem; animation: fadeIn-up 0.6s ease-out; }
         .content-area { flex-grow: 1; min-width: 0; animation: fadeIn-up 0.7s ease-out; display: flex; flex-direction: column; }
         
@@ -59,7 +59,6 @@
         .detail-view { display: none; height: 100%; flex-direction: column; animation: fadeIn 0.5s ease-in-out; }
         .detail-header { margin-bottom: 1.5rem; flex-shrink: 0; }
         .detail-title { font-size: 2rem; font-weight: 700; }
-        /* 【新增】作者資訊樣式 */
         .detail-author { display: none; align-items: center; gap: 0.5rem; margin-top: 0.5rem; color: var(--edcafe-text-light); font-size: 0.875rem; }
         .detail-description { color: var(--edcafe-text-light); margin-top: 0.5rem; }
         .detail-actions { margin-top: 1rem; display: flex; gap: 1rem; }
@@ -67,10 +66,18 @@
         .action-btn:hover { background-color: #FFF; color: var(--edcafe-dark-green); }
         .action-btn:active { animation: button-press 0.2s ease-out; }
         
-        .chatbot-container { width: 100%; flex-grow: 1; min-height: 0; border-radius: 16px; overflow: hidden; box-shadow: 0 8px 30px rgba(0,0,0,0.1); }
+        /* 【CSS 佈局修正】 */
+        .chatbot-container {
+            width: 100%;
+            flex-grow: 1; /* 魔法指令：佔滿所有剩餘的垂直空間 */
+            min-height: 0; /* 在 flex 容器中，這是必要的，以允許正確縮小 */
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+            background-color: #fff; /* 新增一個背景色以防 iframe 透明 */
+        }
         .chatbot-container iframe { width: 100%; height: 100%; border: none; }
 
-        /* 【新增】提示視窗樣式 */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-color: rgba(0, 0, 0, 0.6); z-index: 1000;
@@ -131,7 +138,6 @@
                 <div id="detail-view" class="detail-view">
                     <div class="detail-header">
                         <h1 id="detail-title"></h1>
-                        <!-- 【新增】作者資訊顯示位置 -->
                         <div id="detail-author" class="detail-author">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z"/></svg>
                             <span id="author-name"></span>
@@ -150,7 +156,6 @@
         </main>
     </div>
 
-    <!-- 【新增】提示視窗 HTML 結構 -->
     <div id="modal-overlay" class="modal-overlay">
         <div id="modal-content" class="modal-content">
             <p id="modal-message"></p>
