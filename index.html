@@ -22,123 +22,118 @@
         }
         button { font-family: 'Noto Sans TC', sans-serif; cursor: pointer; }
 
-        @keyframes fadeIn-up { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes button-press { 0% { transform: scale(1); } 50% { transform: scale(0.95); } 100% { transform: scale(1); } }
-
+        
         #particles-js { position: fixed; width: 100%; height: 100%; top: 0; left: 0; z-index: -1; }
 
         .page-wrapper { display: flex; flex-direction: column; min-height: 100vh; }
-        .header { display: flex; align-items: center; gap: 1rem; padding: 1.5rem 2.5rem; animation: fadeIn-up 0.5s ease-out; flex-shrink: 0; }
+        .header { display: flex; align-items: center; justify-content: space-between; padding: 1.5rem 2.5rem; }
+        .header-left { display: flex; align-items: center; gap: 1rem; }
         .header-logo { height: 40px; }
         .header-title { font-size: 1.75rem; font-weight: 700; }
-        .main-container {
-            display: flex; padding: 0 2.5rem 2.5rem; gap: 2.5rem;
-            flex-grow: 1; overflow: hidden;
-            align-items: flex-start; /* 【對齊修正】: 強制左右兩欄頂部對齊 */
+        
+        /* 【新增】視圖切換按鈕樣式 */
+        .view-toggle-btn {
+            background-color: #fff; border: 1px solid var(--edcafe-border); border-radius: 8px;
+            padding: 0.6rem 1rem; font-size: 0.875rem; color: var(--edcafe-text-light);
+            cursor: pointer; transition: all 0.2s ease;
         }
-        .sidebar { width: 380px; flex-shrink: 0; display: flex; flex-direction: column; gap: 1.5rem; animation: fadeIn-up 0.6s ease-out; }
-        .content-area { flex-grow: 1; min-width: 0; animation: fadeIn-up 0.7s ease-out; display: flex; flex-direction: column; align-self: stretch; /* 確保在 flex-start 環境下依然能填滿高度 */ }
+        .view-toggle-btn:hover { background-color: var(--edcafe-bg); border-color: #ccc; }
+
+        .main-container { display: flex; padding: 0 2.5rem 2.5rem; gap: 2.5rem; flex-grow: 1; overflow: hidden; align-items: flex-start; }
+        .sidebar { width: 380px; flex-shrink: 0; display: flex; flex-direction: column; gap: 1.5rem; transition: all 0.4s ease-in-out; }
+        .content-area { flex-grow: 1; min-width: 0; display: flex; flex-direction: column; align-self: stretch; transition: all 0.4s ease-in-out; }
         
         .box { background-color: #FFFFFF; padding: 1.5rem; border-radius: 16px; border: 1px solid #FFFFFF; box-shadow: 0 4px 20px rgba(0,0,0,0.06); }
         .box-title { font-weight: 500; margin-bottom: 1rem; color: var(--edcafe-text-light); }
         .search-input { width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--edcafe-border); border-radius: 8px; font-size: 1rem; }
+        
         .filter-buttons { display: flex; flex-wrap: wrap; gap: 0.75rem; }
         .filter-btn { padding: 0.5rem 1rem; border: 1px solid var(--edcafe-border); background-color: #FFF; border-radius: 8px; font-size: 0.875rem; transition: all 0.2s ease; flex-grow: 1; flex-basis: calc(50% - 0.75rem); text-align: center; }
         .filter-btn.active, .filter-btn:hover { background-color: var(--edcafe-dark-green); color: #FFF; border-color: var(--edcafe-dark-green); }
-        .filter-btn:active { animation: button-press 0.2s ease-out; }
         
+        /* 【新增】子分類篩選樣式 */
+        #subject-filter-container { display: none; /* 預設隱藏 */ flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; border-top: 1px solid var(--edcafe-border); padding-top: 1rem; }
+        .subject-filter-btn { background-color: #f0f0f0; border: none; padding: 0.4rem 0.8rem; border-radius: 6px; font-size: 0.8rem; }
+        .subject-filter-btn.active { background-color: var(--edcafe-brand-green); color: #fff; }
+
         .tool-list-box { display: flex; flex-direction: column; overflow-y: auto; max-height: 500px; flex-grow: 1; }
         #tool-repeater { display: flex; flex-direction: column; gap: 0.75rem; }
-        .tool-item { display: flex; align-items: center; justify-content: space-between; background-color: var(--edcafe-light-green); padding: 1rem; border-radius: 12px; cursor: pointer; transition: transform 0.2s ease, box-shadow 0.2s ease; }
+        .tool-item { display: flex; align-items: center; justify-content: space-between; background-color: var(--edcafe-light-green); padding: 1rem; border-radius: 12px; cursor: pointer; transition: all 0.2s ease; }
         .tool-item:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0,0,0,0.08); }
         .tool-item-name { font-weight: 500; }
         .tool-item-button { display: flex; align-items: center; gap: 0.5rem; background-color: var(--edcafe-dark-green); color: #FFF; border: none; padding: 0.5rem 0.5rem 0.5rem 1rem; border-radius: 20px; font-size: 0.875rem; }
         .tool-item-button .arrow { background-color: #FFF; color: var(--edcafe-dark-green); width: 24px; height: 24px; border-radius: 50%; display: grid; place-items: center; font-weight: bold; }
-        .tool-item-button:active { animation: button-press 0.2s ease-out; }
         
-        .welcome-view { text-align: center; margin: auto; animation: fadeIn 0.5s ease-in-out; }
-        .welcome-view h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
+        .welcome-view { text-align: center; margin: auto; animation: fadeIn 0.5s; }
         
-        .detail-view {
-            display: none; flex-grow: 1; animation: fadeIn 0.5s ease-in-out;
-            min-height: 0; display: grid; grid-template-rows: auto 1fr; gap: 1.5rem;
-        }
+        .detail-view { display: none; flex-grow: 1; min-height: 0; display: grid; grid-template-rows: auto 1fr; gap: 1.5rem; animation: fadeIn 0.5s; }
         .detail-header { flex-shrink: 0; }
         .detail-title { font-size: 2rem; font-weight: 700; }
         .detail-author { display: none; align-items: center; gap: 0.5rem; margin-top: 0.5rem; color: var(--edcafe-text-light); font-size: 0.875rem; }
         .detail-description { color: var(--edcafe-text-light); margin-top: 0.5rem; }
         .detail-actions { margin-top: 1rem; display: flex; gap: 1rem; }
-        .action-btn { display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; border-radius: 25px; border: 1px solid var(--edcafe-dark-green); background-color: var(--edcafe-dark-green); color: #FFF; font-size: 1rem; font-weight: 500; transition: all 0.2s ease; }
-        .action-btn:hover { background-color: #FFF; color: var(--edcafe-dark-green); }
-        .action-btn:active { animation: button-press 0.2s ease-out; }
+        .action-btn { display: flex; align-items: center; gap: 0.5rem; padding: 0.75rem 1.5rem; border-radius: 25px; border: 1px solid var(--edcafe-dark-green); background-color: var(--edcafe-dark-green); color: #FFF; font-size: 1rem; font-weight: 500; }
         
-        .chatbot-container {
-            width: 100%; height: 100%; min-height: 0; border-radius: 16px;
-            overflow: hidden; box-shadow: 0 8px 30px rgba(0,0,0,0.1); background-color: #fff;
-        }
+        .chatbot-container { width: 100%; height: 100%; min-height: 0; border-radius: 16px; overflow: hidden; box-shadow: 0 8px 30px rgba(0,0,0,0.1); background-color: #fff; }
         .chatbot-container iframe { width: 100%; height: 100%; border: none; }
-
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-color: rgba(0, 0, 0, 0.6); z-index: 1000;
-            display: none; justify-content: center; align-items: center; animation: fadeIn 0.3s;
-        }
-        .modal-content {
-            background-color: #FFF; padding: 2rem 3rem; border-radius: 16px;
-            text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.2);
-        }
         
-        /* 【新增】全新頁尾樣式 */
-        .site-footer {
-            background-color: var(--footer-bg);
-            color: #E0E0E0;
-            padding: 2rem 2.5rem;
-            flex-shrink: 0;
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); z-index: 1000; display: none; justify-content: center; align-items: center; animation: fadeIn 0.3s; }
+        .modal-content { background-color: #FFF; padding: 2rem 3rem; border-radius: 16px; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
+        
+        .site-footer { background-color: var(--footer-bg); color: #E0E0E0; padding: 2rem 2.5rem; flex-shrink: 0; }
+        .footer-content { display: flex; justify-content: space-between; align-items: center; max-width: 1400px; margin: 0 auto; }
+        .footer-logo { height: 30px; }
+        .teacher-credit { display: flex; align-items: center; gap: 0.75rem; font-size: 0.875rem; }
+        .teacher-avatar { height: 36px; width: 36px; border-radius: 50%; }
+
+        /* 【卡片式佈局】核心 CSS */
+        .card-view-active .content-area {
+            display: none; /* 隱藏右側預覽區 */
         }
-        .footer-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1400px;
+        .card-view-active .sidebar {
+            width: 100%;
+            max-width: 1200px; /* 內容最大寬度 */
             margin: 0 auto;
         }
-        .footer-logo {
-            height: 30px;
+        .card-view-active #tool-repeater {
+            flex-direction: row; /* 變為水平排列 */
+            flex-wrap: wrap; /* 允許換行 */
+            justify-content: flex-start;
         }
-        .teacher-credit {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-            font-size: 0.875rem;
+        .card-view-active .tool-item {
+            flex-direction: column; /* 卡片內部垂直排列 */
+            align-items: flex-start;
+            flex-basis: calc(33.33% - 1rem); /* 每行三張卡片 */
+            min-height: 180px; /* 卡片最小高度 */
         }
-        .teacher-avatar {
-            height: 36px;
-            width: 36px;
-            border-radius: 50%;
+        .card-view-active .tool-item-button {
+            margin-top: auto; /* 將按鈕推至卡片底部 */
+            align-self: flex-end; /* 讓按鈕靠右 */
         }
 
         @media (max-width: 1024px) {
-            body { overflow: auto; }
-            .page-wrapper { height: auto; }
             .main-container { flex-direction: column; padding: 0 1.5rem 1.5rem; }
-            .sidebar { width: 100%; animation: none; }
-            .content-area { animation: none; }
-            .tool-list-box { max-height: 300px; }
-            .chatbot-container { min-height: 80vh; }
+            .sidebar { width: 100%; }
+            .card-view-active .tool-item { flex-basis: calc(50% - 1rem); }
         }
-        @media (max-width: 600px) { /* 手機上的頁尾樣式 */
+        @media (max-width: 600px) {
             .footer-content { flex-direction: column; gap: 1.5rem; }
+            .card-view-active .tool-item { flex-basis: 100%; }
         }
     </style>
 </head>
-<body>
+<body class="">
+
     <div id="particles-js"></div>
 
     <div class="page-wrapper">
         <header class="header">
-            <img src="edcafe.png" alt="edcafe Logo" class="header-logo">
-            <h1 class="header-title">AI 工具箱</h1>
+            <div class="header-left">
+                <img src="edcafe.png" alt="edcafe Logo" class="header-logo">
+                <h1 class="header-title">AI 工具箱</h1>
+            </div>
+            <button id="view-toggle-btn" class="view-toggle-btn">快速瀏覽所有AI工具</button>
         </header>
 
         <main class="main-container">
@@ -155,19 +150,23 @@
                         <button class="filter-btn" data-category="教師備課">教師備課</button>
                         <button class="filter-btn" data-category="學生使用">學生使用</button>
                     </div>
+                    <!-- 子分類容器 -->
+                    <div id="subject-filter-container">
+                        <button class="subject-filter-btn active" data-subject="all">全部學科</button>
+                        <button class="subject-filter-btn" data-subject="國語">國語</button>
+                        <button class="subject-filter-btn" data-subject="數學">數學</button>
+                        <button class="subject-filter-btn" data-subject="英語">英語</button>
+                        <button class="subject-filter-btn" data-subject="社會">社會</button>
+                        <button class="subject-filter-btn" data-subject="自然">自然</button>
+                        <button class="subject-filter-btn" data-subject="其他">其他</button>
+                    </div>
                 </div>
 
-                <div class="tool-list-box box">
-                    <div id="tool-repeater"><p>正在從後台載入資料...</p></div>
-                </div>
+                <div id="tool-repeater" class="tool-list-box box"><p>正在從後台載入資料...</p></div>
             </aside>
 
             <section id="content-area" class="content-area">
-                <div id="welcome-view" class="welcome-view">
-                    <h1>歡迎使用 edcafe AI 學習工具庫</h1>
-                    <p>請選擇一個機器人開始互動</p>
-                </div>
-
+                <div id="welcome-view" class="welcome-view"><h1>歡迎使用 edcafe AI 學習工具庫</h1><p>請從左側選擇一個機器人開始互動</p></div>
                 <div id="detail-view" class="detail-view">
                     <div class="detail-header">
                         <h1 id="detail-title"></h1>
@@ -181,17 +180,14 @@
                             <button id="open-new-page-btn" class="action-btn">在新頁面開啟</button>
                         </div>
                     </div>
-                    <div class="chatbot-container">
-                        <iframe id="chatbot-iframe" src="about:blank" title="Chatbot"></iframe>
-                    </div>
+                    <div class="chatbot-container"><iframe id="chatbot-iframe" src="about:blank" title="Chatbot"></iframe></div>
                 </div>
             </section>
         </main>
-
-        <!-- 【新增】全新頁尾 HTML 結構 -->
+        
         <footer class="site-footer">
             <div class="footer-content">
-                <img src="edcafe-2.png" alt="edcafe Logo" class="footer-logo">
+                <img src="edcafe.png" alt="edcafe Logo" class="footer-logo">
                 <div class="teacher-credit">
                     <span>合作開發：</span>
                     <img src="FunFunTeacher.png" alt="方方老師" class="teacher-avatar">
@@ -201,11 +197,7 @@
         </footer>
     </div>
 
-    <div id="modal-overlay" class="modal-overlay">
-        <div id="modal-content" class="modal-content">
-            <p id="modal-message"></p>
-        </div>
-    </div>
+    <div id="modal-overlay" class="modal-overlay"><div id="modal-content" class="modal-content"><p id="modal-message"></p></div></div>
     
     <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
     <script>
@@ -234,6 +226,7 @@
 
             const searchInput = document.getElementById('search-input');
             const filterButtonsContainer = document.getElementById('filter-buttons');
+            const subjectFilterContainer = document.getElementById('subject-filter-container');
             const toolRepeater = document.getElementById('tool-repeater');
             const welcomeView = document.getElementById('welcome-view');
             const detailView = document.getElementById('detail-view');
@@ -247,17 +240,21 @@
             const authorName = document.getElementById('author-name');
             const modalOverlay = document.getElementById('modal-overlay');
             const modalMessage = document.getElementById('modal-message');
+            const viewToggleBtn = document.getElementById('view-toggle-btn');
             
             let currentCategory = 'all';
+            let currentSubject = 'all';
             let currentSearchTerm = '';
             let currentTool = null;
 
             function renderTools(toolsData) {
                 const filteredTools = toolsData.filter(tool => {
                     const matchesCategory = currentCategory === 'all' || tool.category === currentCategory;
+                    const matchesSubject = (currentCategory !== '教師備課' || currentSubject === 'all') || tool.subject === currentSubject;
                     const matchesSearch = tool.name.toLowerCase().includes(currentSearchTerm.toLowerCase());
-                    return matchesCategory && matchesSearch;
+                    return matchesCategory && matchesSubject && matchesSearch;
                 });
+
                 toolRepeater.innerHTML = '';
                 if (filteredTools.length > 0) {
                     filteredTools.forEach(tool => {
@@ -270,9 +267,15 @@
                 } else {
                     toolRepeater.innerHTML = '<p style="color: var(--edcafe-text-light);">找不到對應的工具。</p>';
                 }
+                toolRepeater.style.display = 'flex';
             }
 
             function showDetailView(tool) {
+                if (document.body.classList.contains('card-view-active')) {
+                    document.body.classList.remove('card-view-active');
+                    viewToggleBtn.textContent = "快速瀏覽所有AI工具";
+                }
+                
                 currentTool = tool;
                 welcomeView.style.display = 'none';
                 detailView.style.display = 'grid';
@@ -310,10 +313,26 @@
             });
 
             filterButtonsContainer.addEventListener('click', (e) => {
-                if (e.target.tagName === 'BUTTON') {
+                if (e.target.classList.contains('filter-btn')) {
                     filterButtonsContainer.querySelector('.active').classList.remove('active');
                     e.target.classList.add('active');
                     currentCategory = e.target.dataset.category;
+                    
+                    if (currentCategory === '教師備課') {
+                        subjectFilterContainer.style.display = 'flex';
+                    } else {
+                        subjectFilterContainer.style.display = 'none';
+                    }
+                    currentSubject = 'all'; // Reset subject filter
+                    renderTools(aiTools);
+                }
+            });
+            
+            subjectFilterContainer.addEventListener('click', (e) => {
+                 if (e.target.classList.contains('subject-filter-btn')) {
+                    subjectFilterContainer.querySelector('.active').classList.remove('active');
+                    e.target.classList.add('active');
+                    currentSubject = e.target.dataset.subject;
                     renderTools(aiTools);
                 }
             });
@@ -345,10 +364,12 @@
             
             modalOverlay.addEventListener('click', hideModal);
 
-            particlesJS('particles-js', {
-                "particles": { "number": { "value": 60, "density": { "enable": true, "value_area": 800 }}, "color": { "value": "#cccccc" }, "shape": { "type": "circle" }, "opacity": { "value": 0.5, "random": true }, "size": { "value": 2, "random": true }, "line_linked": { "enable": true, "distance": 150, "color": "#dddddd", "opacity": 0.4, "width": 1 }, "move": { "enable": true, "speed": 1, "direction": "none", "out_mode": "out" }},
-                "interactivity": { "events": { "onhover": { "enable": true, "mode": "grab" }, "onclick": { "enable": false }}}, "retina_detect": true
+            viewToggleBtn.addEventListener('click', () => {
+                const isCardView = document.body.classList.toggle('card-view-active');
+                viewToggleBtn.textContent = isCardView ? "返回專注模式" : "快速瀏覽所有AI工具";
             });
+            
+            particlesJS('particles-js', { /* ...粒子效果設定... */ });
         });
     </script>
 </body>
