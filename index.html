@@ -23,7 +23,7 @@
         button { font-family: 'Noto Sans TC', sans-serif; cursor: pointer; }
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        
+
         #particles-js { position: fixed; width: 100%; height: 100%; top: 0; left: 0; z-index: -1; }
 
         .page-wrapper { display: flex; flex-direction: column; min-height: 100vh; }
@@ -32,13 +32,15 @@
         .header-logo { height: 40px; }
         .header-title { font-size: 1.75rem; font-weight: 700; }
         
-        /* 【新增】視圖切換按鈕樣式 */
-        .view-toggle-btn {
-            background-color: #fff; border: 1px solid var(--edcafe-border); border-radius: 8px;
-            padding: 0.6rem 1rem; font-size: 0.875rem; color: var(--edcafe-text-light);
-            cursor: pointer; transition: all 0.2s ease;
-        }
-        .view-toggle-btn:hover { background-color: var(--edcafe-bg); border-color: #ccc; }
+        /* 【新增】滑動開關樣式 */
+        .view-toggle { display: flex; align-items: center; gap: 0.75rem; }
+        .view-toggle-label { font-size: 0.875rem; color: var(--edcafe-text-light); }
+        .switch { position: relative; display: inline-block; width: 50px; height: 26px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--edcafe-dark-green); }
+        input:checked + .slider:before { transform: translateX(24px); }
 
         .main-container { display: flex; padding: 0 2.5rem 2.5rem; gap: 2.5rem; flex-grow: 1; overflow: hidden; align-items: flex-start; }
         .sidebar { width: 380px; flex-shrink: 0; display: flex; flex-direction: column; gap: 1.5rem; transition: all 0.4s ease-in-out; }
@@ -52,13 +54,13 @@
         .filter-btn { padding: 0.5rem 1rem; border: 1px solid var(--edcafe-border); background-color: #FFF; border-radius: 8px; font-size: 0.875rem; transition: all 0.2s ease; flex-grow: 1; flex-basis: calc(50% - 0.75rem); text-align: center; }
         .filter-btn.active, .filter-btn:hover { background-color: var(--edcafe-dark-green); color: #FFF; border-color: var(--edcafe-dark-green); }
         
-        /* 【新增】子分類篩選樣式 */
-        #subject-filter-container { display: none; /* 預設隱藏 */ flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; border-top: 1px solid var(--edcafe-border); padding-top: 1rem; }
+        #subject-filter-container { display: none; flex-wrap: wrap; gap: 0.5rem; margin-top: 1rem; border-top: 1px solid var(--edcafe-border); padding-top: 1rem; }
         .subject-filter-btn { background-color: #f0f0f0; border: none; padding: 0.4rem 0.8rem; border-radius: 6px; font-size: 0.8rem; }
         .subject-filter-btn.active { background-color: var(--edcafe-brand-green); color: #fff; }
 
         .tool-list-box { display: flex; flex-direction: column; overflow-y: auto; max-height: 500px; flex-grow: 1; }
         #tool-repeater { display: flex; flex-direction: column; gap: 0.75rem; }
+        
         .tool-item { display: flex; align-items: center; justify-content: space-between; background-color: var(--edcafe-light-green); padding: 1rem; border-radius: 12px; cursor: pointer; transition: all 0.2s ease; }
         .tool-item:hover { transform: translateY(-3px); box-shadow: 0 6px 20px rgba(0,0,0,0.08); }
         .tool-item-name { font-weight: 500; }
@@ -81,43 +83,39 @@
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); z-index: 1000; display: none; justify-content: center; align-items: center; animation: fadeIn 0.3s; }
         .modal-content { background-color: #FFF; padding: 2rem 3rem; border-radius: 16px; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
         
+        /* 卡片式佈局 CSS */
+        .card-view-active .content-area { display: none; }
+        .card-view-active .sidebar { width: 100%; max-width: 1200px; margin: 0 auto; }
+        .card-view-active #tool-repeater { flex-direction: row; flex-wrap: wrap; justify-content: flex-start; }
+        .card-view-active .tool-item {
+            flex-direction: column; align-items: flex-start;
+            flex-basis: calc(33.33% - 1rem); /* 預設每行三張卡片 */
+            padding: 1.5rem;
+        }
+        /* 【卡片模式】顯示卡片上的按鈕，隱藏列表按鈕 */
+        .card-view-active .tool-item-button { display: none; }
+        .card-actions-in-card { display: none; margin-top: auto; width: 100%; }
+        .card-view-active .card-actions-in-card { display: flex; flex-direction: column; gap: 0.5rem; }
+        .card-action-btn {
+            width: 100%; background-color: var(--edcafe-dark-green); color: #fff; border: 1px solid var(--edcafe-dark-green);
+            padding: 0.6rem; border-radius: 8px; font-size: 0.875rem; text-align: center;
+            transition: all 0.2s ease;
+        }
+        .card-action-btn:hover { background-color: #fff; color: var(--edcafe-dark-green); }
+
         .site-footer { background-color: var(--footer-bg); color: #E0E0E0; padding: 2rem 2.5rem; flex-shrink: 0; }
         .footer-content { display: flex; justify-content: space-between; align-items: center; max-width: 1400px; margin: 0 auto; }
         .footer-logo { height: 30px; }
         .teacher-credit { display: flex; align-items: center; gap: 0.75rem; font-size: 0.875rem; }
         .teacher-avatar { height: 36px; width: 36px; border-radius: 50%; }
 
-        /* 【卡片式佈局】核心 CSS */
-        .card-view-active .content-area {
-            display: none; /* 隱藏右側預覽區 */
-        }
-        .card-view-active .sidebar {
-            width: 100%;
-            max-width: 1200px; /* 內容最大寬度 */
-            margin: 0 auto;
-        }
-        .card-view-active #tool-repeater {
-            flex-direction: row; /* 變為水平排列 */
-            flex-wrap: wrap; /* 允許換行 */
-            justify-content: flex-start;
-        }
-        .card-view-active .tool-item {
-            flex-direction: column; /* 卡片內部垂直排列 */
-            align-items: flex-start;
-            flex-basis: calc(33.33% - 1rem); /* 每行三張卡片 */
-            min-height: 180px; /* 卡片最小高度 */
-        }
-        .card-view-active .tool-item-button {
-            margin-top: auto; /* 將按鈕推至卡片底部 */
-            align-self: flex-end; /* 讓按鈕靠右 */
-        }
-
         @media (max-width: 1024px) {
-            .main-container { flex-direction: column; padding: 0 1.5rem 1.5rem; }
+            .main-container { flex-direction: column; }
             .sidebar { width: 100%; }
             .card-view-active .tool-item { flex-basis: calc(50% - 1rem); }
         }
         @media (max-width: 600px) {
+            .header { flex-direction: column; align-items: flex-start; gap: 1rem;}
             .footer-content { flex-direction: column; gap: 1.5rem; }
             .card-view-active .tool-item { flex-basis: 100%; }
         }
@@ -133,7 +131,13 @@
                 <img src="edcafe.png" alt="edcafe Logo" class="header-logo">
                 <h1 class="header-title">AI 工具箱</h1>
             </div>
-            <button id="view-toggle-btn" class="view-toggle-btn">快速瀏覽所有AI工具</button>
+            <div class="view-toggle">
+                <span class="view-toggle-label">快速瀏覽模式</span>
+                <label class="switch">
+                    <input type="checkbox" id="view-toggle-switch">
+                    <span class="slider"></span>
+                </label>
+            </div>
         </header>
 
         <main class="main-container">
@@ -150,7 +154,6 @@
                         <button class="filter-btn" data-category="教師備課">教師備課</button>
                         <button class="filter-btn" data-category="學生使用">學生使用</button>
                     </div>
-                    <!-- 子分類容器 -->
                     <div id="subject-filter-container">
                         <button class="subject-filter-btn active" data-subject="all">全部學科</button>
                         <button class="subject-filter-btn" data-subject="國語">國語</button>
@@ -240,7 +243,7 @@
             const authorName = document.getElementById('author-name');
             const modalOverlay = document.getElementById('modal-overlay');
             const modalMessage = document.getElementById('modal-message');
-            const viewToggleBtn = document.getElementById('view-toggle-btn');
+            const viewToggleSwitch = document.getElementById('view-toggle-switch');
             
             let currentCategory = 'all';
             let currentSubject = 'all';
@@ -261,7 +264,20 @@
                         const item = document.createElement('div');
                         item.className = 'tool-item';
                         item.dataset.id = tool.id;
-                        item.innerHTML = `<span class="tool-item-name">${tool.name}</span><button class="tool-item-button">開始使用 <span class="arrow">→</span></button>`;
+                        item.innerHTML = `
+                            <div class="tool-item-info">
+                                <span class="tool-item-name">${tool.name}</span>
+                                <!-- 卡片模式專用按鈕 -->
+                                <div class="card-actions-in-card">
+                                    <button class="card-action-btn" data-action="share">複製至我的帳號</button>
+                                    <button class="card-action-btn" data-action="open">在新頁面開啟</button>
+                                </div>
+                            </div>
+                            <!-- 列表模式專用按鈕 -->
+                            <button class="tool-item-button">
+                                開始使用 <span class="arrow">→</span>
+                            </button>
+                        `;
                         toolRepeater.appendChild(item);
                     });
                 } else {
@@ -273,7 +289,7 @@
             function showDetailView(tool) {
                 if (document.body.classList.contains('card-view-active')) {
                     document.body.classList.remove('card-view-active');
-                    viewToggleBtn.textContent = "快速瀏覽所有AI工具";
+                    viewToggleSwitch.checked = false;
                 }
                 
                 currentTool = tool;
@@ -323,7 +339,10 @@
                     } else {
                         subjectFilterContainer.style.display = 'none';
                     }
-                    currentSubject = 'all'; // Reset subject filter
+                    currentSubject = 'all'; 
+                    const activeSubjectBtn = subjectFilterContainer.querySelector('.active');
+                    if(activeSubjectBtn) activeSubjectBtn.classList.remove('active');
+                    subjectFilterContainer.querySelector('[data-subject="all"]').classList.add('active');
                     renderTools(aiTools);
                 }
             });
@@ -339,12 +358,26 @@
 
             toolRepeater.addEventListener('click', (e) => {
                 const toolItem = e.target.closest('.tool-item');
-                if (toolItem) {
-                    const toolId = parseInt(toolItem.dataset.id, 10);
-                    const selectedTool = aiTools.find(tool => tool.id == toolId);
-                    if (selectedTool) {
-                        showDetailView(selectedTool);
+                if (!toolItem) return;
+
+                const toolId = parseInt(toolItem.dataset.id, 10);
+                const selectedTool = aiTools.find(tool => tool.id == toolId);
+                if (!selectedTool) return;
+
+                // 判斷點擊的是哪個按鈕
+                if (e.target.dataset.action === 'share') {
+                     if (selectedTool.shareLink) {
+                        window.open(selectedTool.shareLink, '_blank');
+                    } else {
+                        showModal('此工具作者目前沒有提供複製連結。');
                     }
+                } else if (e.target.dataset.action === 'open') {
+                    if (selectedTool.chatbotUrl) {
+                        window.open(selectedTool.chatbotUrl, '_blank');
+                    }
+                } else {
+                    // 如果點擊的不是卡片上的按鈕，則執行預設的顯示詳情操作
+                    showDetailView(selectedTool);
                 }
             });
             
@@ -364,12 +397,14 @@
             
             modalOverlay.addEventListener('click', hideModal);
 
-            viewToggleBtn.addEventListener('click', () => {
-                const isCardView = document.body.classList.toggle('card-view-active');
-                viewToggleBtn.textContent = isCardView ? "返回專注模式" : "快速瀏覽所有AI工具";
+            viewToggleSwitch.addEventListener('change', (e) => {
+                document.body.classList.toggle('card-view-active', e.target.checked);
             });
             
-            particlesJS('particles-js', { /* ...粒子效果設定... */ });
+            particlesJS('particles-js', {
+                "particles": { "number": { "value": 60, "density": { "enable": true, "value_area": 800 }}, "color": { "value": "#cccccc" }, "shape": { "type": "circle" }, "opacity": { "value": 0.5, "random": true }, "size": { "value": 2, "random": true }, "line_linked": { "enable": true, "distance": 150, "color": "#dddddd", "opacity": 0.4, "width": 1 }, "move": { "enable": true, "speed": 1, "direction": "none", "out_mode": "out" }},
+                "interactivity": { "events": { "onhover": { "enable": true, "mode": "grab" }, "onclick": { "enable": false }}}, "retina_detect": true
+            });
         });
     </script>
 </body>
