@@ -18,7 +18,7 @@
         body {
             font-family: 'Noto Sans TC', sans-serif; background-color: var(--edcafe-bg);
             color: var(--edcafe-text-dark); font-size: 16px; line-height: 1.6;
-            overflow-x: hidden;
+            overflow: hidden; /* 在桌面版防止滾動 */
         }
         button { font-family: 'Noto Sans TC', sans-serif; cursor: pointer; }
 
@@ -28,8 +28,8 @@
 
         #particles-js { position: fixed; width: 100%; height: 100%; top: 0; left: 0; z-index: -1; }
 
-        .page-wrapper { display: flex; flex-direction: column; min-height: 100vh; }
-        .header { display: flex; align-items: center; gap: 1rem; padding: 1.5rem 2.5rem; animation: fadeIn-up 0.5s ease-out; }
+        .page-wrapper { display: flex; flex-direction: column; height: 100vh; }
+        .header { display: flex; align-items: center; gap: 1rem; padding: 1.5rem 2.5rem; animation: fadeIn-up 0.5s ease-out; flex-shrink: 0; }
         .header-logo { height: 40px; }
         .header-title { font-size: 1.75rem; font-weight: 700; }
         .main-container { display: flex; padding: 0 2.5rem 2.5rem; gap: 2.5rem; flex-grow: 1; overflow: hidden; }
@@ -56,7 +56,14 @@
         .welcome-view { text-align: center; margin: auto; animation: fadeIn 0.5s ease-in-out; }
         .welcome-view h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
         
-        .detail-view { display: none; height: 100%; flex-direction: column; animation: fadeIn 0.5s ease-in-out; }
+        /* 【佈局最終修正】 */
+        .detail-view {
+            display: none;
+            flex-grow: 1; /* 讓詳情區塊填滿 content-area 的空間 */
+            flex-direction: column;
+            animation: fadeIn 0.5s ease-in-out;
+            min-height: 0; /* 允許在 flex 容器中正確縮放 */
+        }
         .detail-header { margin-bottom: 1.5rem; flex-shrink: 0; }
         .detail-title { font-size: 2rem; font-weight: 700; }
         .detail-author { display: none; align-items: center; gap: 0.5rem; margin-top: 0.5rem; color: var(--edcafe-text-light); font-size: 0.875rem; }
@@ -66,15 +73,14 @@
         .action-btn:hover { background-color: #FFF; color: var(--edcafe-dark-green); }
         .action-btn:active { animation: button-press 0.2s ease-out; }
         
-        /* 【CSS 佈局修正】 */
         .chatbot-container {
             width: 100%;
-            flex-grow: 1; /* 魔法指令：佔滿所有剩餘的垂直空間 */
-            min-height: 0; /* 在 flex 容器中，這是必要的，以允許正確縮小 */
+            flex-grow: 1; /* 佔滿 detail-view 剩餘的垂直空間 */
+            min-height: 0;
             border-radius: 16px;
             overflow: hidden;
             box-shadow: 0 8px 30px rgba(0,0,0,0.1);
-            background-color: #fff; /* 新增一個背景色以防 iframe 透明 */
+            background-color: #fff;
         }
         .chatbot-container iframe { width: 100%; height: 100%; border: none; }
 
@@ -91,6 +97,8 @@
         .modal-content p { font-size: 1.125rem; }
 
         @media (max-width: 1024px) {
+            body { overflow: auto; }
+            .page-wrapper { height: auto; }
             .main-container { flex-direction: column; padding: 0 1.5rem 1.5rem; }
             .sidebar { width: 100%; animation: none; }
             .content-area { animation: none; }
