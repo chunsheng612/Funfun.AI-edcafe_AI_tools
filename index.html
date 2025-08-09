@@ -88,10 +88,12 @@
         .card-view-active .sidebar { width: 100%; max-width: 1200px; margin: 0 auto; }
         /* 【卡片等高修正】改用 Grid 佈局 */
         .card-view-active #tool-repeater {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 1.5rem;
+        display: grid; /* 啟用網格佈局 */
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); /* 響應式欄數 */
+        gap: 1.5rem; /* 網格間距 */
+        align-items: stretch; /* 關鍵：強制所有卡片拉伸到一樣的高度 */
         }
+
         .card-view-active .tool-item {
             flex-direction: column; align-items: flex-start;
             background-color: #fff; cursor: default;
@@ -105,12 +107,11 @@
         .card-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem; }
         .card-author { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem; color: var(--edcafe-text-light); font-size: 0.875rem; }
         .card-description { font-size: 0.9rem; color: var(--edcafe-text-light); flex-grow: 1; margin-bottom: 1rem; }
-        .card-actions-wrapper { display: flex; gap: 0.5rem; width: 100%; }
+        .card-actions-wrapper { display: grid; /* 將按鈕的容器也變成網格佈局 */ grid-template-columns: 1fr 1fr; /* 建立兩個等寬的欄位 */ gap: 0.5rem; /* 按鈕之間的間距 */ width: 100%; }
         /* 【按鈕等寬修正】 */
         .card-action-btn {
             background-color: var(--edcafe-dark-green); color: #fff; border: 1px solid var(--edcafe-dark-green);
             padding: 0.6rem; border-radius: 20px; font-size: 0.875rem; text-align: center;
-            flex-grow: 1; /* 讓兩個按鈕等分寬度 */
             transition: all 0.2s ease;
         }
         .card-action-btn:hover { background-color: #fff; color: var(--edcafe-dark-green); }
