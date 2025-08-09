@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>edcafe AI 工具箱</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        /* --- 1. 色彩與風格定義 --- */
+        :root {
+            --edcafe-bg: #F8F7F2;
+            --edcafe-light-green: #E8F5E1;
+            --edcafe-dark-green: #4A6C4A;
+            --edcafe-text-dark: #2F2F2F;
+            --edcafe-text-light: #555555;
+            --edcafe-border: #E0E0E0;
+            --edcafe-brand-green: #8CC63F;
+        }
+
+        /* --- 2. 基礎與重設 --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        html, body {
+            height: 100%;
+        }
+        body {
+            font-family: 'Noto Sans TC', sans-serif;
+            background-color: var(--edcafe-bg);
+            color: var(--edcafe-text-dark);
+            font-size: 16px;
+            line-height: 1.6;
+        }
+        button {
+            font-family: 'Noto Sans TC', sans-serif;
+            cursor: pointer;
+        }
+
+        /* --- 3. 互動粒子背景 --- */
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+
+        /* --- 4. 主要佈局 (全寬響應式) --- */
+        .page-wrapper {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1.5rem 2.5rem;
+            flex-shrink: 0;
+        }
+        .header-logo {
+            height: 40px;
+        }
+        .header-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+        }
+        .main-container {
+            display: flex;
+            padding: 0 2.5rem 2.5rem;
+            gap: 2.5rem;
+            flex-grow: 1;
+        }
+        .sidebar {
+            width: 380px;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        .content-area {
+            flex-grow: 1;
+            min-width: 0;
+        }
+        .footer {
+            text-align: center;
+            padding: 2rem;
+            color: var(--edcafe-text-light);
+            font-size: 0.875rem;
+            flex-shrink: 0;
+        }
+
+        /* --- 5. 元件樣式 --- */
+        .box {
+            background-color: #FFFFFF;
+            padding: 1.5rem;
+            border-radius: 16px;
+            border: 1px solid #FFFFFF;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+        }
+        .box-title {
+            font-weight: 500;
+            margin-bottom: 1rem;
+            color: var(--edcafe-text-light);
+        }
+        .search-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 1px solid var(--edcafe-border);
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        
+        .filter-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+        .filter-btn {
+            padding: 0.5rem 1rem;
+            border: 1px solid var(--edcafe-border);
+            background-color: #FFF;
+            border-radius: 8px;
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
+            flex-grow: 1;
+            flex-basis: calc(50% - 0.75rem);
+            text-align: center;
+        }
+        .filter-btn.active, .filter-btn:hover {
+            background-color: var(--edcafe-dark-green);
+            color: #FFF;
+            border-color: var(--edcafe-dark-green);
+        }
+        
+        #tool-repeater {
+            display: flex; /* 改為 flex 以便顯示載入訊息 */
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        .tool-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background-color: var(--edcafe-light-green);
+            padding: 1rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .tool-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.08);
+        }
+        .tool-item-name {
+            font-weight: 500;
+        }
+        .tool-item-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background-color: var(--edcafe-dark-green);
+            color: #FFF;
+            border: none;
+            padding: 0.5rem 0.5rem 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+        }
+        .tool-item-button .arrow {
+            background-color: #FFF;
+            color: var(--edcafe-dark-green);
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            font-weight: bold;
+        }
+        
+        .welcome-view {
+            text-align: center;
+            padding: 8rem 2rem;
+        }
+        .welcome-view h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .detail-view {
+            display: none;
+            height: 100%;
+            flex-direction: column;
+        }
+        .detail-header { margin-bottom: 2rem; }
+        .detail-title { font-size: 2rem; font-weight: 700; }
+        .detail-description { color: var(--edcafe-text-light); margin-top: 0.5rem; }
+        .detail-actions { margin-top: 1rem; display: flex; gap: 1rem; }
+        .action-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            border-radius: 25px;
+            border: 1px solid var(--edcafe-dark-green);
+            background-color: var(--edcafe-dark-green);
+            color: #FFF;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+        .action-btn:hover { background-color: #FFF; color: var(--edcafe-dark-green); }
+        
+        .chatbot-container {
+            width: 100%;
+            flex-grow: 1;
+            min-height: 70vh;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.1);
+        }
+        .chatbot-container iframe { width: 100%; height: 100%; border: none; }
+
+        /* --- 6. 響應式設計 --- */
+        @media (max-width: 1024px) {
+            .main-container { flex-direction: column; }
+            .sidebar { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <div id="particles-js"></div>
+
+    <div class="page-wrapper">
+        <header class="header">
+            <img src="edcafe.png" alt="edcafe Logo" class="header-logo">
+            <h1 class="header-title">AI 工具箱</h1>
+        </header>
+
+        <main class="main-container">
+            <aside class="sidebar">
+                <div class="search-box box">
+                    <h2 class="box-title">我想使用的工具是...</h2>
+                    <input type="text" id="search-input" class="search-input" placeholder="我的需求是...">
+                </div>
+                
+                <div class="filter-box box">
+                    <div id="filter-buttons" class="filter-buttons">
+                        <button class="filter-btn active" data-category="all">全部工具</button>
+                        <button class="filter-btn" data-category="教師工作">教師工作</button>
+                        <button class="filter-btn" data-category="教師備課">教師備課</button>
+                        <button class="filter-btn" data-category="學生使用">學生使用</button>
+                    </div>
+                </div>
+
+                <div id="tool-repeater" class="tool-list-box box">
+                    <p>正在從後台載入資料...</p>
+                </div>
+            </aside>
+
+            <section class="content-area">
+                <div id="welcome-view" class="welcome-view">
+                    <h1>歡迎使用 edcafe AI 學習工具庫</h1>
+                    <p>請從左側選擇一個機器人開始互動</p>
+                </div>
+
+                <div id="detail-view" class="detail-view">
+                    <div class="detail-header">
+                        <h1 id="detail-title"></h1>
+                        <p id="detail-description"></p>
+                        <div class="detail-actions">
+                            <button id="open-share-link-btn" class="action-btn">複製至我的帳號</button>
+                            <button id="open-new-page-btn" class="action-btn">在新頁面開啟</button>
+                        </div>
+                    </div>
+                    <div class="chatbot-container">
+                        <iframe id="chatbot-iframe" src="about:blank" title="Chatbot"></iframe>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <footer class="footer">
+            ©2025 edcafe. All rights reserved.
+        </footer>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+
+            // --- 1. 從您的 Google Sheets 載入資料 ---
+            const sheetUrl = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vSyNzyJDCrEB_TcB_GGjRkJGRoU5Aw3S3giBao57HFDyTpE8mn_d7OXYn4z_-DeZ9rCGyUSaHmQBB7J/pub?gid=0&single=true&output=csv';
+
+            async function loadToolsFromSheet() {
+                try {
+                    const response = await fetch(sheetUrl);
+                    if (!response.ok) throw new Error('Network response failed');
+                    const csvText = await response.text();
+                    
+                    const lines = csvText.trim().split(/\r?\n/);
+                    const headers = lines[0].split(',').map(h => h.trim());
+                    return lines.slice(1).map(line => {
+                        const values = line.split(',');
+                        let tool = {};
+                        headers.forEach((header, index) => {
+                            tool[header] = values[index] ? values[index].trim() : '';
+                        });
+                        return tool;
+                    });
+                } catch (error) {
+                    console.error('無法從 Google Sheets 載入資料:', error);
+                    toolRepeater.innerHTML = '<p style="color: red;">錯誤：無法載入後台資料。</p>';
+                    return [];
+                }
+            }
+
+            // --- 2. 獲取所有需要的 DOM 元件 ---
+            const searchInput = document.getElementById('search-input');
+            const filterButtonsContainer = document.getElementById('filter-buttons');
+            const toolRepeater = document.getElementById('tool-repeater');
+            const welcomeView = document.getElementById('welcome-view');
+            const detailView = document.getElementById('detail-view');
+            const detailTitle = document.getElementById('detail-title');
+            const detailDescription = document.getElementById('detail-description');
+            const openShareLinkBtn = document.getElementById('open-share-link-btn');
+            const openNewPageBtn = document.getElementById('open-new-page-btn');
+            const chatbotIframe = document.getElementById('chatbot-iframe');
+            
+            let currentCategory = 'all';
+            let currentSearchTerm = '';
+            let currentTool = null;
+
+            // --- 3. 核心函式 ---
+            function renderTools(toolsData) {
+                const filteredTools = toolsData.filter(tool => {
+                    const matchesCategory = currentCategory === 'all' || tool.category === currentCategory;
+                    const matchesSearch = tool.name.toLowerCase().includes(currentSearchTerm.toLowerCase());
+                    return matchesCategory && matchesSearch;
+                });
+
+                toolRepeater.innerHTML = '';
+                if (filteredTools.length > 0) {
+                    filteredTools.forEach(tool => {
+                        const item = document.createElement('div');
+                        item.className = 'tool-item';
+                        item.dataset.id = tool.id;
+                        item.innerHTML = `
+                            <span class="tool-item-name">${tool.name}</span>
+                            <button class="tool-item-button">
+                                開始使用 <span class="arrow">→</span>
+                            </button>
+                        `;
+                        toolRepeater.appendChild(item);
+                    });
+                } else {
+                    toolRepeater.innerHTML = '<p style="color: var(--edcafe-text-light);">找不到對應的工具。</p>';
+                }
+            }
+
+            function showDetailView(tool) {
+                currentTool = tool;
+                welcomeView.style.display = 'none';
+                detailView.style.display = 'flex';
+                detailTitle.textContent = tool.name;
+                detailDescription.textContent = tool.description;
+                chatbotIframe.src = tool.chatbotUrl;
+            }
+
+            // --- 4. 初始執行與事件監聽 ---
+            const aiTools = await loadToolsFromSheet();
+            
+            renderTools(aiTools);
+
+            searchInput.addEventListener('input', (e) => {
+                currentSearchTerm = e.target.value;
+                renderTools(aiTools);
+            });
+
+            filterButtonsContainer.addEventListener('click', (e) => {
+                if (e.target.tagName === 'BUTTON') {
+                    filterButtonsContainer.querySelector('.active').classList.remove('active');
+                    e.target.classList.add('active');
+                    currentCategory = e.target.dataset.category;
+                    renderTools(aiTools);
+                }
+            });
+
+            toolRepeater.addEventListener('click', (e) => {
+                const toolItem = e.target.closest('.tool-item');
+                if (toolItem) {
+                    const toolId = parseInt(toolItem.dataset.id, 10);
+                    const selectedTool = aiTools.find(tool => tool.id == toolId);
+                    if (selectedTool) {
+                        showDetailView(selectedTool);
+                    }
+                }
+            });
+            
+            openNewPageBtn.addEventListener('click', () => {
+                if (currentTool && currentTool.chatbotUrl) {
+                    window.open(currentTool.chatbotUrl, '_blank');
+                }
+            });
+            
+            openShareLinkBtn.addEventListener('click', () => {
+                if (currentTool && currentTool.shareLink) {
+                    window.open(currentTool.shareLink, '_blank');
+                }
+            });
+            
+            // 初始化粒子效果
+            particlesJS('particles-js', {
+                "particles": {
+                    "number": { "value": 60, "density": { "enable": true, "value_area": 800 } },
+                    "color": { "value": "#cccccc" },
+                    "shape": { "type": "circle" },
+                    "opacity": { "value": 0.5, "random": true },
+                    "size": { "value": 2, "random": true },
+                    "line_linked": { "enable": true, "distance": 150, "color": "#dddddd", "opacity": 0.4, "width": 1 },
+                    "move": { "enable": true, "speed": 1, "direction": "none", "out_mode": "out" }
+                },
+                "interactivity": {
+                    "events": { "onhover": { "enable": true, "mode": "grab" }, "onclick": { "enable": false } }
+                },
+                "retina_detect": true
+            });
+        });
+    </script>
+</body>
+</html>
