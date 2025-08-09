@@ -74,7 +74,8 @@
         .detail-author { display: none; align-items: center; gap: 0.5rem; margin-top: 0.5rem; color: var(--edcafe-text-light); font-size: 0.875rem; }
         .detail-description { color: var(--edcafe-text-light); margin-top: 0.5rem; }
         .detail-actions { margin-top: 1rem; display: flex; gap: 1rem; }
-        .action-btn { display: flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.75rem 1.5rem; border-radius: 25px; border: 1px solid var(--edcafe-dark-green); background-color: var(--edcafe-dark-green); color: #FFF; font-size: 1rem; font-weight: 500; flex-grow: 1; }
+        /* 【按鈕大小修正】移除 flex-grow，讓按鈕自適應寬度 */
+        .action-btn { display: flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.75rem 1.5rem; border-radius: 25px; border: 1px solid var(--edcafe-dark-green); background-color: var(--edcafe-dark-green); color: #FFF; font-size: 1rem; font-weight: 500; }
         
         .chatbot-container { width: 100%; height: 100%; min-height: 0; border-radius: 16px; overflow: hidden; box-shadow: 0 8px 30px rgba(0,0,0,0.1); background-color: #fff; }
         .chatbot-container iframe { width: 100%; height: 100%; border: none; }
@@ -82,15 +83,20 @@
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); z-index: 1000; display: none; justify-content: center; align-items: center; animation: fadeIn 0.3s; }
         .modal-content { background-color: #FFF; padding: 2rem 3rem; border-radius: 16px; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
         
+        /* 【卡片式佈局】核心 CSS (已重構) */
         .card-view-active .content-area { display: none; }
         .card-view-active .sidebar { width: 100%; max-width: 1200px; margin: 0 auto; }
-        .card-view-active #tool-repeater { flex-direction: row; flex-wrap: wrap; justify-content: flex-start; }
+        /* 【卡片等高修正】改用 Grid 佈局 */
+        .card-view-active #tool-repeater {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 1.5rem;
+        }
         .card-view-active .tool-item {
             flex-direction: column; align-items: flex-start;
-            flex-basis: calc(33.33% - 1rem);
-            background-color: #fff;
-            cursor: default;
+            background-color: #fff; cursor: default;
             padding: 1.5rem;
+            border: 1px solid var(--edcafe-border); /* 【新增】卡片邊框 */
         }
         .card-view-active .tool-item-button { display: none; }
         
@@ -100,10 +106,12 @@
         .card-author { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem; color: var(--edcafe-text-light); font-size: 0.875rem; }
         .card-description { font-size: 0.9rem; color: var(--edcafe-text-light); flex-grow: 1; margin-bottom: 1rem; }
         .card-actions-wrapper { display: flex; gap: 0.5rem; width: 100%; }
+        /* 【按鈕等寬修正】 */
         .card-action-btn {
             background-color: var(--edcafe-dark-green); color: #fff; border: 1px solid var(--edcafe-dark-green);
             padding: 0.6rem; border-radius: 20px; font-size: 0.875rem; text-align: center;
-            flex-grow: 1; transition: all 0.2s ease;
+            flex-grow: 1; /* 讓兩個按鈕等分寬度 */
+            transition: all 0.2s ease;
         }
         .card-action-btn:hover { background-color: #fff; color: var(--edcafe-dark-green); }
 
@@ -116,12 +124,11 @@
         @media (max-width: 1024px) {
             .main-container { flex-direction: column; }
             .sidebar { width: 100%; }
-            .card-view-active .tool-item { flex-basis: calc(50% - 1rem); }
         }
         @media (max-width: 600px) {
             .header { flex-direction: column; align-items: flex-start; gap: 1rem;}
             .footer-content { flex-direction: column; gap: 1.5rem; }
-            .card-view-active .tool-item { flex-basis: 100%; }
+            .card-view-active #tool-repeater { grid-template-columns: 1fr; } /* 手機上變為單欄 */
         }
     </style>
 </head>
@@ -271,7 +278,7 @@
                         
                         const authorHTML = tool.author ? `
                             <div class="card-author">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-s1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z"/></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z"/></svg>
                                 <span>由 ${tool.author} 提供</span>
                             </div>` : '';
 
