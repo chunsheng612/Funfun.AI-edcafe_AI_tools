@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>edcafe AI 工具箱</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://fonts.gstatic" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
     <style>
         :root {
@@ -18,7 +18,7 @@
         body {
             font-family: 'Noto Sans TC', sans-serif; background-color: var(--edcafe-bg);
             color: var(--edcafe-text-dark); font-size: 16px; line-height: 1.6;
-            overflow: hidden; /* 在桌面版防止滾動 */
+            overflow: hidden;
         }
         button { font-family: 'Noto Sans TC', sans-serif; cursor: pointer; }
 
@@ -56,15 +56,19 @@
         .welcome-view { text-align: center; margin: auto; animation: fadeIn 0.5s ease-in-out; }
         .welcome-view h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
         
-        /* 【佈局最終修正】 */
+        /* 【佈局最終釜底抽薪修正】 */
         .detail-view {
-            display: none;
-            flex-grow: 1; /* 讓詳情區塊填滿 content-area 的空間 */
-            flex-direction: column;
+            display: none; /* 由 JS 控制顯示 */
+            flex-grow: 1;
             animation: fadeIn 0.5s ease-in-out;
-            min-height: 0; /* 允許在 flex 容器中正確縮放 */
+            min-height: 0;
+            /* 啟用 Grid 佈局 */
+            display: grid;
+            /* 定義兩行：第一行高度自動，第二行佔滿所有剩餘空間 */
+            grid-template-rows: auto 1fr;
+            gap: 1.5rem; /* 在標題區和 ChatBOT 區之間增加一些間距 */
         }
-        .detail-header { margin-bottom: 1.5rem; flex-shrink: 0; }
+        .detail-header { flex-shrink: 0; }
         .detail-title { font-size: 2rem; font-weight: 700; }
         .detail-author { display: none; align-items: center; gap: 0.5rem; margin-top: 0.5rem; color: var(--edcafe-text-light); font-size: 0.875rem; }
         .detail-description { color: var(--edcafe-text-light); margin-top: 0.5rem; }
@@ -75,7 +79,7 @@
         
         .chatbot-container {
             width: 100%;
-            flex-grow: 1; /* 佔滿 detail-view 剩餘的垂直空間 */
+            height: 100%; /* 在 Grid 佈局中，100% 會填滿分配到的空間 */
             min-height: 0;
             border-radius: 16px;
             overflow: hidden;
@@ -238,7 +242,10 @@
             function showDetailView(tool) {
                 currentTool = tool;
                 welcomeView.style.display = 'none';
-                detailView.style.display = 'flex';
+                
+                // 【JS 修正】: 將 display 從 flex 改為 grid，以匹配 CSS 的新佈局
+                detailView.style.display = 'grid';
+                
                 detailTitle.textContent = tool.name;
                 detailDescription.textContent = tool.description;
                 chatbotIframe.src = tool.chatbotUrl;
