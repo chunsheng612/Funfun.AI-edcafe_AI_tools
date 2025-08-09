@@ -71,7 +71,7 @@
         .detail-view { display: none; flex-grow: 1; min-height: 0; display: grid; grid-template-rows: auto 1fr; gap: 1.5rem; animation: fadeIn 0.5s; }
         .detail-header { flex-shrink: 0; }
         .detail-title { font-size: 2rem; font-weight: 700; }
-        .detail-author { display: flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem; color: var(--edcafe-text-light); font-size: 0.875rem; }
+        .detail-author { display: none; align-items: center; gap: 0.5rem; margin-top: 0.5rem; color: var(--edcafe-text-light); font-size: 0.875rem; }
         .detail-description { color: var(--edcafe-text-light); margin-top: 0.5rem; }
         .detail-actions { margin-top: 1rem; display: flex; gap: 1rem; }
         .action-btn { display: flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.75rem 1.5rem; border-radius: 25px; border: 1px solid var(--edcafe-dark-green); background-color: var(--edcafe-dark-green); color: #FFF; font-size: 1rem; font-weight: 500; flex-grow: 1; }
@@ -82,19 +82,18 @@
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); z-index: 1000; display: none; justify-content: center; align-items: center; animation: fadeIn 0.3s; }
         .modal-content { background-color: #FFF; padding: 2rem 3rem; border-radius: 16px; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
         
-        /* 【卡片式佈局】核心 CSS (已重構) */
         .card-view-active .content-area { display: none; }
         .card-view-active .sidebar { width: 100%; max-width: 1200px; margin: 0 auto; }
         .card-view-active #tool-repeater { flex-direction: row; flex-wrap: wrap; justify-content: flex-start; }
         .card-view-active .tool-item {
             flex-direction: column; align-items: flex-start;
             flex-basis: calc(33.33% - 1rem);
-            background-color: #fff; /* 卡片模式下背景為白色 */
-            cursor: default; /* 卡片本身不可點擊 */
+            background-color: #fff;
+            cursor: default;
+            padding: 1.5rem;
         }
         .card-view-active .tool-item-button { display: none; }
         
-        /* 新增：卡片內部詳細內容的樣式 */
         .card-info { display: none; flex-direction: column; height: 100%; }
         .card-view-active .card-info { display: flex; }
         .card-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem; }
@@ -270,19 +269,16 @@
                         item.className = 'tool-item';
                         item.dataset.id = tool.id;
                         
-                        // 【卡片內容重構】
                         const authorHTML = tool.author ? `
                             <div class="card-author">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z"/></svg>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 16 16"><path d="M8 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6m2-3a2 2 0 1 1-4 0 2 2 0 0 1 4 0m4 8c0 1-1 1-1 1H3s-s1 0-1-1 1-4 6-4 6 3 6 4m-1-.004c-.001-.246-.154-.986-.832-1.664C11.516 10.68 10.289 10 8 10s-3.516.68-4.168 1.332c-.678.678-.83 1.418-.832 1.664z"/></svg>
                                 <span>由 ${tool.author} 提供</span>
                             </div>` : '';
 
                         item.innerHTML = `
-                            <!-- 列表模式與卡片模式共用資訊 -->
-                            <div class="tool-item-name card-title">${tool.name}</div>
-                            
-                            <!-- 卡片模式專用資訊 -->
+                            <span class="tool-item-name">${tool.name}</span>
                             <div class="card-info">
+                                <div class="card-title">${tool.name}</div>
                                 ${authorHTML}
                                 <p class="card-description">${tool.description}</p>
                                 <div class="card-actions-wrapper">
@@ -290,8 +286,6 @@
                                     <button class="card-action-btn" data-action="open">在新頁面開啟</button>
                                 </div>
                             </div>
-
-                            <!-- 列表模式專用按鈕 -->
                             <button class="tool-item-button">
                                 開始使用 <span class="arrow">→</span>
                             </button>
@@ -301,7 +295,6 @@
                 } else {
                     toolRepeater.innerHTML = '<p style="color: var(--edcafe-text-light);">找不到對應的工具。</p>';
                 }
-                toolRepeater.style.display = 'flex';
             }
 
             function showDetailView(tool) {
