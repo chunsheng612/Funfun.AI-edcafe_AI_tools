@@ -18,7 +18,6 @@
         body {
             font-family: 'Noto Sans TC', sans-serif; background-color: var(--edcafe-bg);
             color: var(--edcafe-text-dark); font-size: 16px; line-height: 1.6;
-            overflow-x: hidden;
         }
         button { font-family: 'Noto Sans TC', sans-serif; cursor: pointer; }
 
@@ -27,7 +26,7 @@
 
         #particles-js { position: fixed; width: 100%; height: 100%; top: 0; left: 0; z-index: -1; }
 
-        .page-wrapper { display: flex; flex-direction: column; min-height: 100vh; }
+        .page-wrapper { display: flex; flex-direction: column; min-height: 100vh; /* 從「固定高度」改為「最小高度」 */}
         .header { display: flex; align-items: center; justify-content: space-between; padding: 1.5rem 2.5rem; }
         .header-left { display: flex; align-items: center; gap: 1rem; }
         .header-logo { height: 40px; }
@@ -80,7 +79,7 @@
         .action-btn:hover { background-color: #FFF; color: var(--edcafe-dark-green); }
         .action-btn:active { animation: button-press 0.2s ease-out; }
         
-        .chatbot-container { width: 100%; height: 100%; min-height: 0; border-radius: 16px; overflow: hidden; box-shadow: 0 8px 30px rgba(0,0,0,0.1); background-color: #fff; }
+        .chatbot-container { width: 100%; height: 100%; min-height: 75vh;; border-radius: 16px; overflow: hidden; box-shadow: 0 8px 30px rgba(0,0,0,0.1); background-color: #fff; }
         .chatbot-container iframe { width: 100%; height: 100%; border: none; }
         
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); z-index: 1000; display: none; justify-content: center; align-items: center; animation: fadeIn 0.3s; }
@@ -88,22 +87,17 @@
         
         .card-view-active .content-area { display: none; }
         .card-view-active .sidebar { width: 100%; max-width: 1200px; margin: 0 auto; }
-        /* 【最終卡片等高修正】 */
         .card-view-active #tool-repeater {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 1.5rem;
-            align-items: start; /* 從 stretch 改為 start，讓卡片不等高 */
-        }
-        .card-view-active .tool-list-box {
-            max-height: none; /* 卡片模式下解除最大高度限制 */
-            overflow-y: visible;
+            align-items: stretch;
         }
         .card-view-active .tool-item {
             flex-direction: column; align-items: flex-start;
             background-color: #fff; cursor: default;
-            padding: 1.5rem; border: 1px solid var(--edcafe-border);
-            height: 100%; /* 讓 flexbox 生效 */
+            padding: 1.5rem;
+            border: 1px solid var(--edcafe-border);
         }
         .card-view-active .tool-item-button { display: none; }
         .card-view-active .tool-item-name { display: none; }
@@ -115,12 +109,17 @@
         .card-description { font-size: 0.9rem; color: var(--edcafe-text-light); flex-grow: 1; margin-bottom: 1rem; }
         
         .card-actions-wrapper {
-            display: flex; gap: 0.75rem; width: 100%;
+            display: flex;
+            gap: 0.75rem;
+            width: 100%;
         }
         .card-action-btn {
             background-color: var(--edcafe-dark-green); color: #fff; border: 1px solid var(--edcafe-dark-green);
             padding: 0.6rem; border-radius: 20px; font-size: 0.875rem; text-align: center;
-            transition: all 0.2s ease; width: 0; flex-basis: 0; flex-grow: 1;
+            transition: all 0.2s ease;
+            width: 0;
+            flex-basis: 0;
+            flex-grow: 1;
         }
         .card-action-btn:hover { background-color: #fff; color: var(--edcafe-dark-green); }
         .card-action-btn:active { animation: button-press 0.2s ease-out; }
@@ -132,8 +131,6 @@
         .teacher-avatar { height: 36px; width: 36px; border-radius: 50%; }
 
         @media (max-width: 1024px) {
-            body { overflow: auto; }
-            .page-wrapper { height: auto; }
             .main-container { flex-direction: column; }
             .sidebar { width: 100%; }
         }
@@ -432,8 +429,54 @@
             });
             
             particlesJS('particles-js', {
-                "particles": { "number": { "value": 60, "density": { "enable": true, "value_area": 800 }}, "color": { "value": "#cccccc" }, "shape": { "type": "circle" }, "opacity": { "value": 0.5, "random": true }, "size": { "value": 2, "random": true }, "line_linked": { "enable": true, "distance": 150, "color": "#dddddd", "opacity": 0.4, "width": 1 }, "move": { "enable": true, "speed": 1, "direction": "none", "out_mode": "out" }},
-                "interactivity": { "events": { "onhover": { "enable": true, "mode": "grab" }, "onclick": { "enable": false }}}, "retina_detect": true
+                "particles": {
+                    "number": {
+                        "value": 60,
+                        "density": {
+                            "enable": true,
+                            "value_area": 800
+                        }
+                    },
+                    "color": {
+                        "value": "#cccccc"
+                    },
+                    "shape": {
+                        "type": "circle"
+                    },
+                    "opacity": {
+                        "value": 0.5,
+                        "random": true
+                    },
+                    "size": {
+                        "value": 2,
+                        "random": true
+                    },
+                    "line_linked": {
+                        "enable": true,
+                        "distance": 150,
+                        "color": "#dddddd",
+                        "opacity": 0.4,
+                        "width": 1
+                    },
+                    "move": {
+                        "enable": true,
+                        "speed": 1,
+                        "direction": "none",
+                        "out_mode": "out"
+                    }
+                },
+                "interactivity": {
+                    "events": {
+                        "onhover": {
+                            "enable": true,
+                            "mode": "grab"
+                        },
+                        "onclick": {
+                            "enable": false
+                        }
+                    }
+                },
+                "retina_detect": true
             });
         });
     </script>
