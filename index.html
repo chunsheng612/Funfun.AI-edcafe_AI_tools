@@ -133,6 +133,25 @@
         @media (max-width: 1024px) {
             .main-container { flex-direction: column; }
             .sidebar { width: 100%; }
+            /* --- 【新增】手機版字體大小微調 --- */
+            /* 調整卡片模式下的標題 */
+            .card-view-active .card-title {
+                font-size: 1.1rem; /* 將字體從 1.25rem 稍微縮小 */
+            }
+            /* 調整卡片模式下的兩個功能按鈕 */
+            .card-view-active .card-action-btn {
+                font-size: 0.8rem; /* 將字體從 0.875rem 稍微縮小 */
+                padding: 0.5rem;   /* 同時稍微減少按鈕的內邊距，讓它更緊湊 */
+            }
+            /* 調整列表模式下的項目文字 */
+            .tool-item-name {
+                font-size: 0.9rem;
+            }
+            /* 調整列表模式下的「開始使用」按鈕 */
+            .tool-item-button {
+                font-size: 0.8rem;
+                padding: 0.4rem 0.4rem 0.4rem 0.8rem; /* 同樣減少內邊距 */
+            }
         }
         @media (max-width: 600px) {
             .header { flex-direction: column; align-items: flex-start; gap: 1rem;}
