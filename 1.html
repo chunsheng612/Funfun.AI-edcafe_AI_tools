@@ -160,7 +160,7 @@
                 submitBtn.textContent = '傳送中...';
                 statusMsg.textContent = '';
 
-                const scriptURL = '【重要】請在這裡貼上您新的、更簡潔的 Apps Script 網址';
+                const scriptURL = 'https://script.google.com/macros/s/AKfycbyZAEaELnC_2XjhORArq53p_qj3HdvOw11LcLwz8LDuwSktm8JK7ETKpdWs2E8HqafNJA/exec';
                 
                 fetch(scriptURL, { method: 'POST', body: new FormData(form) })
                     .then(response => response.json())
