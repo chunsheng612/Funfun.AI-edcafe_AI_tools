@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>分享您的 AI 工具 - edcafe AI 工具箱</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --edcafe-bg: #F8F7F2; --edcafe-dark-green: #4A6C4A; --edcafe-text-dark: #2F2F2F;
+            --edcafe-text-light: #555555; --edcafe-border: #E0E0E0; --edcafe-brand-green: #8CC63F;
+             --footer-bg: #2F2F2F;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Noto Sans TC', sans-serif; background-color: var(--edcafe-bg);
+            color: var(--edcafe-text-dark); font-size: 16px; line-height: 1.6;
+        }
+        a { color: inherit; text-decoration: none; }
+        #particles-js { position: fixed; width: 100%; height: 100%; top: 0; left: 0; z-index: -1; }
+        .page-wrapper { display: flex; flex-direction: column; min-height: 100vh; }
+        .header { display: flex; align-items: center; justify-content: space-between; padding: 1.5rem 2.5rem; }
+        .header-left { display: flex; align-items: center; gap: 1rem; }
+        .header-logo { height: 40px; }
+        .header-title { font-size: 1.75rem; font-weight: 700; }
+        
+        /* 【響應式修正】使用 max-width 讓佈局更有彈性 */
+        .page-container {
+            max-width: 720px; /* 設定一個優雅的最大寬度 */
+            width: 100%;      /* 確保在小螢幕上能填滿寬度 */
+            margin: 2rem auto 4rem;
+            padding: 0 1.5rem; /* 左右留白，防止手機上內容貼邊 */
+            flex-grow: 1;
+        }
+        .form-title {
+            text-align: center;
+            font-size: 2.25rem;
+            font-weight: 700;
+            margin-bottom: 2.5rem;
+        }
+        .form-container {
+            background-color: #FFFFFF; padding: 2.5rem; border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+        }
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label { display: block; font-weight: 500; margin-bottom: 0.5rem; color: var(--edcafe-text-light); }
+        .form-group input[type="text"],
+        .form-group input[type="url"],
+        .form-group textarea {
+            width: 100%; padding: 0.75rem 1rem; border: 1px solid var(--edcafe-border);
+            border-radius: 8px; font-size: 1rem; font-family: 'Noto Sans TC', sans-serif;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .form-group input:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: var(--edcafe-dark-green);
+            box-shadow: 0 0 0 3px rgba(74, 108, 74, 0.1);
+        }
+        .form-group textarea { min-height: 120px; resize: vertical; }
+        .submit-btn {
+            width: 100%; background-color: var(--edcafe-dark-green); color: #fff; border: none;
+            padding: 1rem; border-radius: 8px; font-size: 1.125rem; font-weight: 500; cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+        .submit-btn:hover:not(:disabled) { background-color: #3a563a; }
+        .submit-btn:disabled { background-color: #ccc; cursor: not-allowed; }
+        #submission-status { margin-top: 1.5rem; text-align: center; font-weight: 500; }
+        .back-link-wrapper { text-align: center; margin-top: 2rem; }
+        .back-link {
+            color: var(--edcafe-text-light); text-decoration: none;
+            font-size: 0.9rem; transition: color 0.2s ease;
+        }
+        .back-link:hover { color: var(--edcafe-dark-green); text-decoration: underline; }
+
+        .site-footer { background-color: var(--footer-bg); color: #E0E0E0; padding: 2rem 2.5rem; flex-shrink: 0; }
+        .footer-content { display: flex; justify-content: space-between; align-items: center; max-width: 1400px; margin: 0 auto; }
+        .footer-logo { height: 30px; }
+        .teacher-credit { display: flex; align-items: center; gap: 0.75rem; font-size: 0.875rem; }
+        .teacher-avatar { height: 36px; width: 36px; border-radius: 50%; }
+        .footer-link { color: #E0E0E0; text-decoration: none; transition: color 0.2s ease; font-size: 0.875rem; }
+        .footer-link:hover { color: var(--edcafe-brand-green); }
+
+        @media (max-width: 600px) {
+            .header, .footer-content { flex-direction: column; align-items: flex-start; gap: 1.5rem; }
+            .page-container { margin: 2rem auto; }
+            .form-container { padding: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <div id="particles-js"></div>
+    <div class="page-wrapper">
+        <header class="header">
+            <a href="index.html" class="header-left">
+                <img src="edcafe.png" alt="edcafe Logo" class="header-logo">
+                <h1 class="header-title">AI 工具箱</h1>
+            </a>
+        </header>
+
+        <main class="page-container">
+            <h1 class="form-title">分享您設計的 AI 工具</h1>
+            <div class="form-container">
+                <form id="tool-form">
+                    <div class="form-group">
+                        <label for="authorName">您的姓名或暱稱</label>
+                        <input type="text" id="authorName" name="authorName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="toolName">AI 工具名稱</label>
+                        <input type="text" id="toolName" name="toolName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="description">工具簡短描述</label>
+                        <textarea id="description" name="description" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="shareLink">ChatBOT 分享連結</label>
+                        <input type="url" id="shareLink" name="shareLink" placeholder="https://..." required>
+                    </div>
+                    <button type="submit" id="submit-btn" class="submit-btn">提交分享</button>
+                    <p id="submission-status"></p>
+                </form>
+                <div class="back-link-wrapper">
+                    <a href="index.html" class="back-link">← 回到 AI 工具箱首頁</a>
+                </div>
+            </div>
+        </main>
+        
+        <footer class="site-footer">
+            <div class="footer-content">
+                <img src="edcafe-2.png" alt="edcafe Logo" class="footer-logo">
+                <a href="https://changsheng0612.notion.site/edcafe-AI-2626ff0d799b809b8da3fb976f3aeb42?source=copy_link" class="footer-link">如何取得分享連結？</a>
+                <div class="teacher-credit">
+                    <span>合作開發：</span>
+                    <img src="FunFunTeacher.png" alt="方方老師" class="teacher-avatar">
+                    <span>方方老師</span>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            particlesJS('particles-js', {
+                "particles": { "number": { "value": 60, "density": { "enable": true, "value_area": 800 }}, "color": { "value": "#cccccc" }, "shape": { "type": "circle" }, "opacity": { "value": 0.5, "random": true }, "size": { "value": 2, "random": true }, "line_linked": { "enable": true, "distance": 150, "color": "#dddddd", "opacity": 0.4, "width": 1 }, "move": { "enable": true, "speed": 1, "direction": "none", "out_mode": "out" }},
+                "interactivity": { "events": { "onhover": { "enable": true, "mode": "grab" }, "onclick": { "enable": false }}}, "retina_detect": true
+            });
+            
+            const form = document.getElementById('tool-form');
+            const submitBtn = document.getElementById('submit-btn');
+            const statusMsg = document.getElementById('submission-status');
+
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                submitBtn.disabled = true;
+                submitBtn.textContent = '傳送中...';
+                statusMsg.textContent = '';
+
+                const scriptURL = '【重要】請在這裡貼上您新的、更簡潔的 Apps Script 網址';
+                
+                fetch(scriptURL, { method: 'POST', body: new FormData(form) })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.result === 'success') {
+                            statusMsg.textContent = '提交成功！感謝您的分享，我們將在審核後上架。';
+                            statusMsg.style.color = 'green';
+                            form.reset();
+                        } else {
+                            throw new Error(data.message || '發生未知錯誤，請稍後再試。');
+                        }
+                    })
+                    .catch(error => {
+                        statusMsg.textContent = `提交失敗：${error.message}`;
+                        statusMsg.style.color = 'red';
+                    })
+                    .finally(() => {
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = '提交分享';
+                    });
+            });
+        });
+    </script>
+</body>
+</html>
