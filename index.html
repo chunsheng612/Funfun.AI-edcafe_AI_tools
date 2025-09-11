@@ -18,20 +18,30 @@
         body {
             font-family: 'Noto Sans TC', sans-serif; background-color: var(--edcafe-bg);
             color: var(--edcafe-text-dark); font-size: 16px; line-height: 1.6;
+            overflow-x: hidden;
         }
         button { font-family: 'Noto Sans TC', sans-serif; cursor: pointer; }
+        a { color: inherit; text-decoration: none; }
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes button-press { 0% { transform: scale(1); } 50% { transform: scale(0.95); } 100% { transform: scale(1); } }
 
         #particles-js { position: fixed; width: 100%; height: 100%; top: 0; left: 0; z-index: -1; }
 
-        .page-wrapper { display: flex; flex-direction: column; min-height: 100vh; /* 從「固定高度」改為「最小高度」 */}
+        .page-wrapper { display: flex; flex-direction: column; min-height: 100vh; }
         .header { display: flex; align-items: center; justify-content: space-between; padding: 1.5rem 2.5rem; }
         .header-left { display: flex; align-items: center; gap: 1rem; }
         .header-logo { height: 40px; }
         .header-title { font-size: 1.75rem; font-weight: 700; }
+        .header-actions { display: flex; align-items: center; gap: 1.5rem; }
         
+        .share-tool-btn {
+            background-color: var(--edcafe-dark-green); color: #fff; padding: 0.6rem 1.2rem;
+            border-radius: 20px; text-decoration: none; font-size: 0.9rem; font-weight: 500;
+            transition: opacity 0.2s ease; border: 1px solid var(--edcafe-dark-green);
+        }
+        .share-tool-btn:hover { background-color: #fff; color: var(--edcafe-dark-green); }
+
         .view-toggle { display: flex; align-items: center; gap: 0.75rem; }
         .view-toggle-label { font-size: 0.875rem; color: var(--edcafe-text-light); }
         .switch { position: relative; display: inline-block; width: 50px; height: 26px; }
@@ -58,7 +68,7 @@
         .subject-filter-btn { background-color: #f0f0f0; border: none; padding: 0.4rem 0.8rem; border-radius: 6px; font-size: 0.8rem; }
         .subject-filter-btn.active { background-color: var(--edcafe-brand-green); color: #fff; }
 
-        .tool-list-box { display: flex; flex-direction: column; overflow-y: auto; max-height: 75vh; flex-grow: 1; }
+        .tool-list-box { display: flex; flex-direction: column; overflow-y: auto; max-height: 500px; flex-grow: 1; }
         #tool-repeater { display: flex; flex-direction: column; gap: 0.75rem; }
         
         .tool-item { display: flex; align-items: center; justify-content: space-between; background-color: var(--edcafe-light-green); padding: 1rem; border-radius: 12px; cursor: pointer; transition: all 0.2s ease; }
@@ -75,109 +85,75 @@
         .detail-author { display: none; align-items: center; gap: 0.5rem; margin-top: 0.5rem; color: var(--edcafe-text-light); font-size: 0.875rem; }
         .detail-description { color: var(--edcafe-text-light); margin-top: 0.5rem; }
         .detail-actions { margin-top: 1rem; display: flex; gap: 1rem; }
-        .action-btn { display: flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.75rem 1.5rem; border-radius: 25px; border: 1px solid var(--edcafe-dark-green); background-color: var(--edcafe-dark-green); color: #FFF; font-size: 1rem; font-weight: 500; transition: all 0.2s ease; }
+        .action-btn { display: flex; align-items: center; justify-content: center; gap: 0.5rem; padding: 0.75rem 1.5rem; border-radius: 25px; border: 1px solid var(--edcafe-dark-green); background-color: var(--edcafe-dark-green); color: #FFF; font-size: 1rem; font-weight: 500; }
         .action-btn:hover { background-color: #FFF; color: var(--edcafe-dark-green); }
-        .action-btn:active { animation: button-press 0.2s ease-out; }
         
-        .chatbot-container { width: 100%; height: 100%; min-height: 75vh;; border-radius: 16px; overflow: hidden; box-shadow: 0 8px 30px rgba(0,0,0,0.1); background-color: #fff; }
+        .chatbot-container { width: 100%; height: 100%; min-height: 0; border-radius: 16px; overflow: hidden; box-shadow: 0 8px 30px rgba(0,0,0,0.1); background-color: #fff; }
         .chatbot-container iframe { width: 100%; height: 100%; border: none; }
         
         .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.6); z-index: 1000; display: none; justify-content: center; align-items: center; animation: fadeIn 0.3s; }
         .modal-content { background-color: #FFF; padding: 2rem 3rem; border-radius: 16px; text-align: center; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
         
-        .card-view-active .content-area { display: none; }
-        .card-view-active .sidebar { width: 100%; max-width: 1200px; margin: 0 auto; }
-        .card-view-active #tool-repeater {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 1.5rem;
-            align-items: stretch;
-        }
-        .card-view-active .tool-item {
-            flex-direction: column; align-items: flex-start;
-            background-color: #fff; cursor: default;
-            padding: 1.5rem;
-            border: 1px solid var(--edcafe-border);
-        }
-        .card-view-active .tool-item-button { display: none; }
-        .card-view-active .tool-item-name { display: none; }
-        
+        /* 【預設瀏覽模式修正】 */
+        body.card-view-active .content-area { display: none; }
+        body.card-view-active .sidebar { width: 100%; max-width: 1200px; margin: 0 auto; }
+        body.card-view-active #tool-repeater { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem; align-items: stretch; }
+        body.card-view-active .tool-item { flex-direction: column; align-items: flex-start; background-color: #fff; cursor: default; padding: 1.5rem; border: 1px solid var(--edcafe-border); }
+        body.card-view-active .tool-item-button { display: none; }
+        body.card-view-active .tool-item-name { display: none; }
         .card-info { display: none; flex-direction: column; height: 100%; }
-        .card-view-active .card-info { display: flex; }
+        body.card-view-active .card-info { display: flex; }
         .card-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem; }
         .card-author { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem; color: var(--edcafe-text-light); font-size: 0.875rem; }
         .card-description { font-size: 0.9rem; color: var(--edcafe-text-light); flex-grow: 1; margin-bottom: 1rem; }
-        
-        .card-actions-wrapper {
-            display: flex;
-            gap: 0.75rem;
-            width: 100%;
-        }
+        .card-actions-wrapper { display: flex; gap: 0.75rem; width: 100%; }
         .card-action-btn {
             background-color: var(--edcafe-dark-green); color: #fff; border: 1px solid var(--edcafe-dark-green);
             padding: 0.6rem; border-radius: 20px; font-size: 0.875rem; text-align: center;
-            transition: all 0.2s ease;
-            width: 0;
-            flex-basis: 0;
-            flex-grow: 1;
+            transition: all 0.2s ease; width: 0; flex-basis: 0; flex-grow: 1;
         }
         .card-action-btn:hover { background-color: #fff; color: var(--edcafe-dark-green); }
-        .card-action-btn:active { animation: button-press 0.2s ease-out; }
 
         .site-footer { background-color: var(--footer-bg); color: #E0E0E0; padding: 2rem 2.5rem; flex-shrink: 0; }
         .footer-content { display: flex; justify-content: space-between; align-items: center; max-width: 1400px; margin: 0 auto; }
         .footer-logo { height: 30px; }
         .teacher-credit { display: flex; align-items: center; gap: 0.75rem; font-size: 0.875rem; }
         .teacher-avatar { height: 36px; width: 36px; border-radius: 50%; }
-        .footer-link { color: #E0E0E0; text-decoration: none; transition: color 0.2s ease; font-size: 0.875rem; }
-        .footer-link:hover { color: var(--edcafe-brand-green); }
 
         @media (max-width: 1024px) {
             .main-container { flex-direction: column; }
             .sidebar { width: 100%; }
-            /* --- 【新增】手機版字體大小微調 --- */
-            /* 調整卡片模式下的標題 */
-            .card-view-active .card-title {
-                font-size: 1.1rem; /* 將字體從 1.25rem 稍微縮小 */
-            }
-            /* 調整卡片模式下的兩個功能按鈕 */
-            .card-view-active .card-action-btn {
-                font-size: 0.8rem; /* 將字體從 0.875rem 稍微縮小 */
-                padding: 0.5rem;   /* 同時稍微減少按鈕的內邊距，讓它更緊湊 */
-            }
-            /* 調整列表模式下的項目文字 */
-            .tool-item-name {
-                font-size: 0.9rem;
-            }
-            /* 調整列表模式下的「開始使用」按鈕 */
-            .tool-item-button {
-                font-size: 0.8rem;
-                padding: 0.4rem 0.4rem 0.4rem 0.8rem; /* 同樣減少內邊距 */
-            }
         }
-        @media (max-width: 600px) {
-            .header { flex-direction: column; align-items: flex-start; gap: 1rem;}
+        @media (max-width: 768px) {
+            .header { flex-direction: column; align-items: stretch; gap: 1rem;}
+            .header-actions { justify-content: space-between; }
             .footer-content { flex-direction: column; gap: 1.5rem; }
-            .card-view-active #tool-repeater { grid-template-columns: 1fr; }
+            body.card-view-active .tool-item { flex-basis: calc(50% - 1rem); }
+        }
+        @media (max-width: 480px) {
+            body.card-view-active .tool-item { flex-basis: 100%; }
         }
     </style>
 </head>
-<body class="">
+<body class="card-view-active">
 
     <div id="particles-js"></div>
 
     <div class="page-wrapper">
         <header class="header">
             <div class="header-left">
-                <img src="edcafe.png" alt="edcafe Logo" class="header-logo">
+                <img src="https://funfun-edcafe-ai-tools.netlify.app/edcafe.png" alt="edcafe Logo" class="header-logo">
                 <h1 class="header-title">AI 工具箱</h1>
             </div>
-            <div class="view-toggle">
-                <span class="view-toggle-label">快速瀏覽模式</span>
-                <label class="switch">
-                    <input type="checkbox" id="view-toggle-switch">
-                    <span class="slider"></span>
-                </label>
+            <div class="header-actions">
+                <a href="1.html" class="share-tool-btn">分享你的AI工具</a>
+                <div class="view-toggle">
+                    <span id="view-toggle-label" class="view-toggle-label">專注模式</span>
+                    <label class="switch">
+                        <input type="checkbox" id="view-toggle-switch" checked>
+                        <span class="slider"></span>
+                    </label>
+                </div>
             </div>
         </header>
 
@@ -197,9 +173,9 @@
                     </div>
                     <div id="subject-filter-container">
                         <button class="subject-filter-btn active" data-subject="all">全部學科</button>
-                        <button class="subject-filter-btn" data-subject="國語文">國語文</button>
-                        <button class="subject-filter-btn" data-subject="英語文">英語文</button>
+                        <button class="subject-filter-btn" data-subject="國語">國語</button>
                         <button class="subject-filter-btn" data-subject="數學">數學</button>
+                        <button class="subject-filter-btn" data-subject="英語">英語</button>
                         <button class="subject-filter-btn" data-subject="社會">社會</button>
                         <button class="subject-filter-btn" data-subject="自然">自然</button>
                         <button class="subject-filter-btn" data-subject="其他">其他</button>
@@ -210,7 +186,7 @@
             </aside>
 
             <section id="content-area" class="content-area">
-                <div id="welcome-view" class="welcome-view"><h1>歡迎使用 edcafe AI 學習工具庫</h1><p>請選擇一個機器人開始互動</p></div>
+                <div id="welcome-view" class="welcome-view"><h1>歡迎使用 edcafe AI 學習工具庫</h1><p>請從左側選擇一個機器人開始互動</p></div>
                 <div id="detail-view" class="detail-view">
                     <div class="detail-header">
                         <h1 id="detail-title"></h1>
@@ -231,11 +207,10 @@
         
         <footer class="site-footer">
             <div class="footer-content">
-                <img src="edcafe-2.png" alt="edcafe Logo" class="footer-logo">
-                   <a href="1.html" class="footer-link">分享您的 AI 工具</a>
+                <img src="https://funfun-edcafe-ai-tools.netlify.app/edcafe-2.png" alt="edcafe Logo" class="footer-logo">
                 <div class="teacher-credit">
                     <span>合作開發：</span>
-                    <img src="FunFunTeacher.png" alt="方方老師" class="teacher-avatar">
+                    <img src="https://funfun-edcafe-ai-tools.netlify.app/FunFunTeacher.png" alt="方方老師" class="teacher-avatar">
                     <span>方方老師</span>
                 </div>
             </div>
@@ -286,6 +261,7 @@
             const modalOverlay = document.getElementById('modal-overlay');
             const modalMessage = document.getElementById('modal-message');
             const viewToggleSwitch = document.getElementById('view-toggle-switch');
+            const viewToggleLabel = document.getElementById('view-toggle-label');
             
             let currentCategory = 'all';
             let currentSubject = 'all';
@@ -339,6 +315,7 @@
                 if (document.body.classList.contains('card-view-active')) {
                     document.body.classList.remove('card-view-active');
                     viewToggleSwitch.checked = false;
+                    viewToggleLabel.textContent = '快速瀏覽模式';
                 }
                 
                 currentTool = tool;
@@ -447,58 +424,14 @@
             modalOverlay.addEventListener('click', hideModal);
 
             viewToggleSwitch.addEventListener('change', (e) => {
-                document.body.classList.toggle('card-view-active', e.target.checked);
+                const isCardView = e.target.checked;
+                document.body.classList.toggle('card-view-active', isCardView);
+                viewToggleLabel.textContent = isCardView ? '專注模式' : '快速瀏覽模式';
             });
             
             particlesJS('particles-js', {
-                "particles": {
-                    "number": {
-                        "value": 60,
-                        "density": {
-                            "enable": true,
-                            "value_area": 800
-                        }
-                    },
-                    "color": {
-                        "value": "#cccccc"
-                    },
-                    "shape": {
-                        "type": "circle"
-                    },
-                    "opacity": {
-                        "value": 0.5,
-                        "random": true
-                    },
-                    "size": {
-                        "value": 2,
-                        "random": true
-                    },
-                    "line_linked": {
-                        "enable": true,
-                        "distance": 150,
-                        "color": "#dddddd",
-                        "opacity": 0.4,
-                        "width": 1
-                    },
-                    "move": {
-                        "enable": true,
-                        "speed": 1,
-                        "direction": "none",
-                        "out_mode": "out"
-                    }
-                },
-                "interactivity": {
-                    "events": {
-                        "onhover": {
-                            "enable": true,
-                            "mode": "grab"
-                        },
-                        "onclick": {
-                            "enable": false
-                        }
-                    }
-                },
-                "retina_detect": true
+                "particles": { "number": { "value": 60, "density": { "enable": true, "value_area": 800 }}, "color": { "value": "#cccccc" }, "shape": { "type": "circle" }, "opacity": { "value": 0.5, "random": true }, "size": { "value": 2, "random": true }, "line_linked": { "enable": true, "distance": 150, "color": "#dddddd", "opacity": 0.4, "width": 1 }, "move": { "enable": true, "speed": 1, "direction": "none", "out_mode": "out" }},
+                "interactivity": { "events": { "onhover": { "enable": true, "mode": "grab" }, "onclick": { "enable": false }}}, "retina_detect": true
             });
         });
     </script>
