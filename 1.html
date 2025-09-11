@@ -26,12 +26,11 @@
         .header-logo { height: 40px; }
         .header-title { font-size: 1.75rem; font-weight: 700; }
         
-        /* 【響應式修正】使用 max-width 讓佈局更有彈性 */
         .page-container {
-            max-width: 720px; /* 設定一個優雅的最大寬度 */
-            width: 100%;      /* 確保在小螢幕上能填滿寬度 */
+            max-width: 720px;
+            width: 100%;
             margin: 2rem auto 4rem;
-            padding: 0 1.5rem; /* 左右留白，防止手機上內容貼邊 */
+            padding: 0 1.5rem;
             flex-grow: 1;
         }
         .form-title {
@@ -45,7 +44,21 @@
             box-shadow: 0 4px 20px rgba(0,0,0,0.06);
         }
         .form-group { margin-bottom: 1.5rem; }
-        .form-group label { display: block; font-weight: 500; margin-bottom: 0.5rem; color: var(--edcafe-text-light); }
+        .form-group .label-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        .form-group label { display: block; font-weight: 500; color: var(--edcafe-text-light); }
+        .form-group .help-link {
+            font-size: 0.8rem;
+            color: var(--edcafe-brand-green);
+            text-decoration: none;
+            font-weight: 400;
+        }
+        .form-group .help-link:hover { text-decoration: underline; }
+
         .form-group input[type="text"],
         .form-group input[type="url"],
         .form-group textarea {
@@ -79,8 +92,6 @@
         .footer-logo { height: 30px; }
         .teacher-credit { display: flex; align-items: center; gap: 0.75rem; font-size: 0.875rem; }
         .teacher-avatar { height: 36px; width: 36px; border-radius: 50%; }
-        .footer-link { color: #E0E0E0; text-decoration: none; transition: color 0.2s ease; font-size: 0.875rem; }
-        .footer-link:hover { color: var(--edcafe-brand-green); }
 
         @media (max-width: 600px) {
             .header, .footer-content { flex-direction: column; align-items: flex-start; gap: 1.5rem; }
@@ -94,7 +105,7 @@
     <div class="page-wrapper">
         <header class="header">
             <a href="index.html" class="header-left">
-                <img src="edcafe.png" alt="edcafe Logo" class="header-logo">
+                <img src="https://funfun-edcafe-ai-tools.netlify.app/edcafe.png" alt="edcafe Logo" class="header-logo">
                 <h1 class="header-title">AI 工具箱</h1>
             </a>
         </header>
@@ -116,7 +127,10 @@
                         <textarea id="description" name="description" required></textarea>
                     </div>
                     <div class="form-group">
-                        <label for="shareLink">ChatBOT 分享連結</label>
+                        <div class="label-wrapper">
+                            <label for="shareLink">ChatBOT 分享連結</label>
+                            <a href="https://changsheng0612.notion.site/edcafe-AI-2626ff0d799b809b8da3fb976f3aeb42?source=copy_link" target="_blank" class="help-link">如何取得？</a>
+                        </div>
                         <input type="url" id="shareLink" name="shareLink" placeholder="https://..." required>
                     </div>
                     <button type="submit" id="submit-btn" class="submit-btn">提交分享</button>
@@ -130,11 +144,10 @@
         
         <footer class="site-footer">
             <div class="footer-content">
-                <img src="edcafe-2.png" alt="edcafe Logo" class="footer-logo">
-                <a href="https://changsheng0612.notion.site/edcafe-AI-2626ff0d799b809b8da3fb976f3aeb42?source=copy_link" class="footer-link">如何取得分享連結？</a>
+                <img src="https://funfun-edcafe-ai-tools.netlify.app/edcafe-1.png" alt="edcafe Logo" class="footer-logo">
                 <div class="teacher-credit">
                     <span>合作開發：</span>
-                    <img src="FunFunTeacher.png" alt="方方老師" class="teacher-avatar">
+                    <img src="https://funfun-edcafe-ai-tools.netlify.app/FunFunTeacher.png" alt="方方老師" class="teacher-avatar">
                     <span>方方老師</span>
                 </div>
             </div>
